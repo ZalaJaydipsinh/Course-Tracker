@@ -1,0 +1,16 @@
+bcryptjs
+- to encrypt user password
+
+jsonwebtoken
+- to generate token
+
+validator
+- to validate form fields
+
+nodemailer
+- to send opt mail
+
+cookie-parser
+- to store token in cookie.
+
+body-parser
