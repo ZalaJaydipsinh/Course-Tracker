@@ -1,7 +1,8 @@
 class ApiFeatures{
-    constructor(query,queryStr){
+    constructor(query,queryStr,uid){
         this.query = query;
         this.queryStr = queryStr;
+        this.uid = uid;
     }
 
     search(){
@@ -12,7 +13,7 @@ class ApiFeatures{
             }
         } :{};
 
-        this.query = this.query.find({...keyword});
+        this.query = this.query.find({"user":this.uid,...keyword});
         return this;
     }
 

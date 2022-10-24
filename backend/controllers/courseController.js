@@ -3,8 +3,29 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ApiFeatures = require("../utils/apifeatures");
 
+//create course by user
 exports.createCourse = catchAsyncErrors(async (req, res, next) => {
-  const course = await Course.create(req.body);
+  const {
+    name,
+    description,
+    totalTracks,
+    doneTracks,
+    totalDuration,
+    doneDuration,
+    tracks,
+  } = req.body;
+
+  const course = await Course.create({
+    name,
+    description,
+    totalTracks,
+    doneTracks,
+    totalDuration,
+    doneDuration,
+    tracks,
+    user: req.user._id,
+    createdAt: Date.now()
+  });
 
   res.status(201).json({
     sucess: true,
@@ -12,13 +33,14 @@ exports.createCourse = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+//get all courses of a user
 exports.getAllCourses = catchAsyncErrors(async (req, res) => {
-  const courseCount = await Course.countDocuments();
-  const apifeatures = new ApiFeatures(Course.find(), req.query).search();
+  // const courseCount = await Course.countDocuments();
+  const apifeatures = new ApiFeatures(Course.find(), req.query,req.user._id).search();
 
   const courses = await apifeatures.query;
 
-  res.status(200).json({ sucess: true, courses, courseCount });
+  res.status(200).json({ sucess: true, courses, courseCount:courses.length });
 });
 
 exports.getCourseDetails = catchAsyncErrors(async (req, res, next) => {
@@ -152,7 +174,7 @@ exports.getAllTracks = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Delete track
+//Delete a track
 exports.deleteTrack = catchAsyncErrors(async (req, res, next) => {
   const course = await Course.findById(req.query.courseId);
 
@@ -164,33 +186,21 @@ exports.deleteTrack = catchAsyncErrors(async (req, res, next) => {
     (track) => track._id.toString() !== req.query.id.toString()
   );
 
-
-  /*
-  totalTracks: {
-    type: Number,
-    default: 0,
-  },
-  doneTracks: {
-    type: Number,
-    default: 0,
-  },
-  totalDuration: duration,
-  doneDuration: duration,
-  */
-
   let totalTracks = tracks.length;
   let doneTracks = 0;
-  let tH=0,tM=0;
-  let dH=0,dM=0;
-  tracks.forEach((track)=>{
-    if(track.done){
+  let tH = 0,
+    tM = 0;
+  let dH = 0,
+    dM = 0;
+  tracks.forEach((track) => {
+    if (track.done) {
       doneTracks++;
       dH += track.totalDuration.hours;
       dM += track.totalDuration.minutes;
     }
     tH += track.totalDuration.hours;
     tM += track.totalDuration.minutes;
-  })
+  });
 
   tH += parseInt(tM / 60);
   dH += parseInt(dM / 60);
@@ -202,16 +212,16 @@ exports.deleteTrack = catchAsyncErrors(async (req, res, next) => {
     req.query.courseId,
     {
       tracks,
-      totalDuration:{
-        hours:tH,
-        minutes:tM
+      totalDuration: {
+        hours: tH,
+        minutes: tM,
       },
-      doneDuration:{
+      doneDuration: {
         hours: dH,
-        minutes: dM
+        minutes: dM,
       },
       totalTracks,
-      doneTracks
+      doneTracks,
     },
     {
       new: true,

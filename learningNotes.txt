@@ -14,3 +14,10 @@ cookie-parser
 - to store token in cookie.
 
 body-parser
+
+====> Frontend
+
+axios
+- To fetch data from backend
+
+react-alert
