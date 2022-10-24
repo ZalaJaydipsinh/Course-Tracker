@@ -67,3 +67,160 @@ exports.deleteCourse = catchAsyncErrors(async (req, res, next) => {
     message: "Course Deleted Successfully",
   });
 });
+
+//Create a new Track or update existing
+exports.createTrack = catchAsyncErrors(async (req, res, next) => {
+  const {
+    name,
+    done,
+    bookmark,
+    notes,
+    url,
+    hours,
+    minutes,
+    courseId,
+    trackId,
+  } = req.body;
+
+  const newTrack = {
+    name,
+    done: Boolean(done),
+    bookmark: Boolean(bookmark),
+    notes,
+    url,
+    totalDuration: {
+      hours: Number(hours),
+      minutes: Number(minutes),
+    },
+  };
+
+  const course = await Course.findById(courseId);
+  if (!course) {
+    return next(new ErrorHandler("Course not found", 404));
+  }
+  if (trackId) {
+    course.tracks.forEach((track) => {
+      if (track._id.toString() === trackId) {
+        if (track.done) {
+          course.subtractDoneDuration(
+            track.totalDuration.hours,
+            track.totalDuration.minutes
+          );
+        }
+        if (Boolean(done)) {
+          course.addDoneDuration(hours, minutes);
+        }
+        course.subtractTotalDuration(
+          track.totalDuration.hours,
+          track.totalDuration.minutes
+        );
+        course.addTotalDuration(hours, minutes);
+
+        track.name = name;
+        track.done = done;
+        track.bookmark = bookmark;
+        track.notes = notes;
+        track.url = url;
+        track.totalDuration.hours = hours;
+        track.totalDuration.minutes = minutes;
+      }
+    });
+  } else {
+    course.tracks.push(newTrack);
+    course.totalTracks = course.tracks.length;
+    course.addTotalDuration(hours, minutes);
+  }
+
+  await course.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+  });
+});
+
+//Get all tracks for particular course
+exports.getAllTracks = catchAsyncErrors(async (req, res, next) => {
+  const course = await Course.findById(req.query.id);
+
+  if (!course) {
+    return next(new ErrorHandler("Course not found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    tracks: course.tracks,
+  });
+});
+
+//Delete track
+exports.deleteTrack = catchAsyncErrors(async (req, res, next) => {
+  const course = await Course.findById(req.query.courseId);
+
+  if (!course) {
+    return next(new ErrorHandler("Course not found", 404));
+  }
+
+  const tracks = course.tracks.filter(
+    (track) => track._id.toString() !== req.query.id.toString()
+  );
+
+
+  /*
+  totalTracks: {
+    type: Number,
+    default: 0,
+  },
+  doneTracks: {
+    type: Number,
+    default: 0,
+  },
+  totalDuration: duration,
+  doneDuration: duration,
+  */
+
+  let totalTracks = tracks.length;
+  let doneTracks = 0;
+  let tH=0,tM=0;
+  let dH=0,dM=0;
+  tracks.forEach((track)=>{
+    if(track.done){
+      doneTracks++;
+      dH += track.totalDuration.hours;
+      dM += track.totalDuration.minutes;
+    }
+    tH += track.totalDuration.hours;
+    tM += track.totalDuration.minutes;
+  })
+
+  tH += parseInt(tM / 60);
+  dH += parseInt(dM / 60);
+
+  tM = tM % 60;
+  dM = dM % 60;
+
+  await Course.findByIdAndUpdate(
+    req.query.courseId,
+    {
+      tracks,
+      totalDuration:{
+        hours:tH,
+        minutes:tM
+      },
+      doneDuration:{
+        hours: dH,
+        minutes: dM
+      },
+      totalTracks,
+      doneTracks
+    },
+    {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+  });
+});
