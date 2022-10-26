@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.9",
+    "@mui/material": "^5.10.11",
+    "@mui/styled-engine-sc": "^5.10.6",
+    "@mui/styles": "^5.10.10",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -20,7 +26,9 @@
     "redux": "^4.2.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.1",
-    "web-vitals": "^2.1.4"
+    "styled-components": "^5.3.6",
+    "web-vitals": "^2.1.4",
+    "webfontloader": "^1.6.28"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -45,5 +53,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://192.168.106.39:4000"
 }

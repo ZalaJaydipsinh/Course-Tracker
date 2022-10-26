@@ -1,14 +1,26 @@
 import "./App.css";
-import Header from "./component/layout/Header.js";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { ReactNavbar } from "overlay-navbar";
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import Home from "./component/Home/Home.js";
+import WebFont from "webfontloader";
+import Appbar from "./component/layout/Appbar";
 
 function App() {
+  useEffect(() => {
+    WebFont.load({
+      google: {
+        families: ["Roboto", "Droid Sans", "Chilanka"],
+      },
+    });
+  }, []);
   return (
-      <Router>
-        <ReactNavbar />
-      </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Appbar />}>
+          <Route index element={<Home />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

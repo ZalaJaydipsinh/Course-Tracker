@@ -8,11 +8,13 @@ const {
   createTrack,
   getAllTracks,
   deleteTrack,
+  getAllCoursesdata,
 } = require("../controllers/courseController");
 const { isAuthenticatedUser } = require("../middleware/auth");
 
 const router = express.Router();
 router.route("/courses").get(isAuthenticatedUser,getAllCourses);
+router.route("/coursesdata").get(getAllCoursesdata);
 router.route("/course/new").post(isAuthenticatedUser, createCourse);
 router
   .route("/course/:id")
