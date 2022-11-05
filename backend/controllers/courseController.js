@@ -48,23 +48,23 @@ exports.getAllCoursesdata = catchAsyncErrors(async (req, res,next) => {
   // return next(new ErrorHandler("Testing erros...",400));
   // const courseCount = await Course.countDocuments();
   // const apifeatures = new ApiFeatures(Course.find(), req.query,req.user._id).search();
-  const coursesCount = await Course.countDocuments();
+  const courseCount = await Course.countDocuments();
 
   const courses = await Course.find();
 
-  res.status(200).json({ sucess: true, courses, coursesCount });
+  res.status(200).json({ sucess: true, courses, courseCount });
 });
 
 exports.getCourseDetails = catchAsyncErrors(async (req, res, next) => {
-  const course = await Course.findById(req.params.id);
+  const courseDetails = await Course.findById(req.params.id);
 
-  if (!course) {
+  if (!courseDetails) {
     return next(new ErrorHandler("Course not found.", 404));
   }
 
   res.status(200).json({
     sucess: true,
-    course,
+    courseDetails,
   });
 });
 

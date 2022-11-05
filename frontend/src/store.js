@@ -5,10 +5,11 @@ import {
 } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { courseReducer } from "./reducers/courseReducer";
+import { courseReducer, courseDetailsReducer } from "./reducers/courseReducer";
 
 const reducer = combineReducers({
   courses: courseReducer,
+  courseDetails: courseDetailsReducer,
 });
 
 let initialState = {};

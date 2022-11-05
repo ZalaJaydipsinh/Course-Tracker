@@ -12,10 +12,10 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import WhereToVoteRoundedIcon from "@mui/icons-material/WhereToVoteRounded";
-import { Outlet } from "react-router-dom";
+import { Outlet,Link } from "react-router-dom";
 
-const pages = ["Courses", "New", "Update"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const pages = ["courses", "New", "Update"];
+const settings = ["Login", "Profile", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -93,7 +93,9 @@ function ResponsiveAppBar() {
               >
                 {pages.map((page) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    
                     <Typography textAlign="center">{page}</Typography>
+                    
                   </MenuItem>
                 ))}
               </Menu>
@@ -155,7 +157,7 @@ function ResponsiveAppBar() {
               >
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                   <Typography textAlign="center"><Link to={`/${setting}`}> {setting}</Link> </Typography>
                   </MenuItem>
                 ))}
               </Menu>

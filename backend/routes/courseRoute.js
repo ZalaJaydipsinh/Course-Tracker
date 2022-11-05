@@ -16,11 +16,16 @@ const router = express.Router();
 router.route("/courses").get(isAuthenticatedUser,getAllCourses);
 router.route("/coursesdata").get(getAllCoursesdata);
 router.route("/course/new").post(isAuthenticatedUser, createCourse);
-router
+// router
+//   .route("/course/:id")
+//   .put(isAuthenticatedUser, updateCourse)
+//   .delete(isAuthenticatedUser, deleteCourse)
+//   .get(isAuthenticatedUser,getCourseDetails);
+  router
   .route("/course/:id")
-  .put(isAuthenticatedUser, updateCourse)
-  .delete(isAuthenticatedUser, deleteCourse)
-  .get(isAuthenticatedUser,getCourseDetails);
+  .put( updateCourse)
+  .delete( deleteCourse)
+  .get(getCourseDetails);
 
 router.route("/tracks").get(isAuthenticatedUser, getAllTracks);
 router.route("/track/new").post(isAuthenticatedUser,createTrack);
