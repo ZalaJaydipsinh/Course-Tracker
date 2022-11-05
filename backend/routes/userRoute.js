@@ -20,7 +20,7 @@ router.route("/password/forgot").post(forgotPassword);
 router.route("/logout").get(logout);
 router.route("/me").get(isAuthenticatedUser, getUserDetails);
 router.route("/password/update").post(isAuthenticatedUser,updatePassword);
-router.route("/me/update").post(isAuthenticatedUser, updateProfile);
+router.route("/me/update").put(isAuthenticatedUser, updateProfile);
 
 
 module.exports = router;

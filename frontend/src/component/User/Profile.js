@@ -1,22 +1,23 @@
 import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
 import MetaData from "../layout/MetaData";
-import Loader from "../layout/Loader/Loader";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
-const Profile = ({ history }) => {
+const Profile = () => {
+  const history = useNavigate();
   const { user, loading, isAuthenticated } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (isAuthenticated === false) {
-      history.push("/login");
+      history("/login");
     }
   }, [history, isAuthenticated]);
   return (
     <Fragment>
       {loading ? (
-        <Loader />
+        <h1>Profile is fetching... ... ...</h1>
       ) : (
         <Fragment>
           <MetaData title={`${user.name}'s Profile`} />
@@ -41,7 +42,6 @@ const Profile = ({ history }) => {
               </div>
 
               <div>
-                <Link to="/orders">My Orders</Link>
                 <Link to="/password/update">Change Password</Link>
               </div>
             </div>

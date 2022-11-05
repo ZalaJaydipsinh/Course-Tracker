@@ -6,14 +6,15 @@ import WebFont from "webfontloader";
 import Appbar from "./component/layout/Appbar";
 import CourseDetails from "./component/Course/courseDetails.js";
 import LoginSignUp from "./component/User/LoginSignUp.js";
+import Profile from "./component/User/Profile.js";
+import UpdateProfile from "./component/User/UpdateProfile.js";
 import UserOptions from "./component/layout/Header/UserOptions";
 import store from "./store.js";
 import { loadUser } from "./actions/userAction";
 import { useSelector } from "react-redux";
 
 function App() {
-
-  const {isAuthenticated, user} = useSelector(state => state.user);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   useEffect(() => {
     WebFont.load({
       google: {
@@ -25,15 +26,17 @@ function App() {
   }, []);
   return (
     <BrowserRouter>
-    {isAuthenticated && <UserOptions user={user}/>}
-        <Routes>
-          <Route path="/" element={<Appbar />}>
-            <Route index element={<Home />} />
-            <Route path="course/:id" element={<CourseDetails />} />
-            <Route path="Login/" element={<LoginSignUp />} />
-
-          </Route>
-        </Routes>
+      {isAuthenticated && <UserOptions user={user} />}
+      <Routes>
+        <Route path="/" element={<Appbar />}>
+          <Route index element={<Home />} />
+          <Route path="course/:id" element={<CourseDetails />} />
+          <Route path="Login/" element={<LoginSignUp />} />
+          <Route path="account/" element={ isAuthenticated ? <Profile /> : <LoginSignUp />} />
+          <Route path="me/update" element={ isAuthenticated ? <UpdateProfile /> : <LoginSignUp />} />
+        
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }

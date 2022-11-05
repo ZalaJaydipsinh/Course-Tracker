@@ -1,15 +1,19 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "./UpdateProfile.css";
-import Loader from "../layout/Loader/Loader";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import FaceIcon from "@material-ui/icons/Face";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import FaceIcon from "@mui/icons-material/Face";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, updateProfile, loadUser } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 import { UPDATE_PROFILE_RESET } from "../../constants/userConstants";
 import MetaData from "../layout/MetaData";
+import { useNavigate } from "react-router-dom";
 
-const UpdateProfile = ({ history }) => {
+
+
+const UpdateProfile = () => {
+  const history = useNavigate();
+
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -18,7 +22,7 @@ const UpdateProfile = ({ history }) => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [avatar, setAvatar] = useState();
+  const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
 
   const updateProfileSubmit = (e) => {
@@ -53,7 +57,7 @@ const UpdateProfile = ({ history }) => {
     }
 
     if (error) {
-      alert.error(error);
+      return alert.error(error);
       dispatch(clearErrors());
     }
 
@@ -61,7 +65,7 @@ const UpdateProfile = ({ history }) => {
       alert.success("Profile Updated Successfully");
       dispatch(loadUser());
 
-      history.push("/account");
+      history("/account");
 
       dispatch({
         type: UPDATE_PROFILE_RESET,
@@ -71,7 +75,7 @@ const UpdateProfile = ({ history }) => {
   return (
     <Fragment>
       {loading ? (
-        <Loader />
+        <h1>Update Profile waiting ... ... ...</h1>
       ) : (
         <Fragment>
           <MetaData title="Update Profile" />

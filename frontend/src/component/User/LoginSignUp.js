@@ -104,7 +104,7 @@ const LoginSignUp = ({ location }) => {
   return (
     <Fragment>
       {loading ? (
-        <h1> Waiting ... ... ...</h1>
+        <h1> LoginSignUp waiting ... ... ...</h1>
       ) : (
         <Fragment>
           <div className="LoginSignUpContainer">
