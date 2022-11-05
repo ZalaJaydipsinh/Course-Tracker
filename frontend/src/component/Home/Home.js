@@ -25,7 +25,7 @@ const Home = () => {
     <>
       <MetaData title={"Course Tracker"} />
       {loading?(<h1>waiting... ... ...</h1>):(
-       courses.map((course)=>(
+       courses && courses.map((course)=>(
         <CourseCard key={course._id} course={course} />
        ))
       )}

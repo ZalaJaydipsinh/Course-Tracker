@@ -1,15 +1,15 @@
 import React, { Fragment, useRef, useState, useEffect } from "react";
 import "./LoginSignUp.css";
-import Loader from "../layout/Loader/Loader";
-import { Link } from "react-router-dom";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
-import FaceIcon from "@material-ui/icons/Face";
+import { Link,useNavigate } from "react-router-dom";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import FaceIcon from "@mui/icons-material/Face";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, login, register } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 
-const LoginSignUp = ({ history, location }) => {
+const LoginSignUp = ({ location }) => {
+  const history = useNavigate();
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -69,7 +69,9 @@ const LoginSignUp = ({ history, location }) => {
     }
   };
 
-  const redirect = location.search ? location.search.split("=")[1] : "/account";
+  // const redirect = location.search ? location.search.split("=")[1] : "/account";
+  const redirect = "/";
+
 
   useEffect(() => {
     if (error) {
@@ -78,7 +80,7 @@ const LoginSignUp = ({ history, location }) => {
     }
 
     if (isAuthenticated) {
-      history.push(redirect);
+      history(redirect);
     }
   }, [dispatch, error, alert, history, isAuthenticated, redirect]);
 
@@ -102,7 +104,7 @@ const LoginSignUp = ({ history, location }) => {
   return (
     <Fragment>
       {loading ? (
-        <Loader />
+        <h1> Waiting ... ... ...</h1>
       ) : (
         <Fragment>
           <div className="LoginSignUpContainer">
