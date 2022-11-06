@@ -1,16 +1,17 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "./UpdatePassword.css";
-import Loader from "../layout/Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, updatePassword } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 import { UPDATE_PASSWORD_RESET } from "../../constants/userConstants";
 import MetaData from "../layout/MetaData";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
-import LockIcon from "@material-ui/icons/Lock";
-import VpnKeyIcon from "@material-ui/icons/VpnKey";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import LockIcon from "@mui/icons-material/Lock";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import { useNavigate } from "react-router-dom";
 
-const UpdatePassword = ({ history }) => {
+const UpdatePassword = () => {
+  const history = useNavigate();
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -41,7 +42,7 @@ const UpdatePassword = ({ history }) => {
     if (isUpdated) {
       alert.success("Profile Updated Successfully");
 
-      history.push("/account");
+      history("/account");
 
       dispatch({
         type: UPDATE_PASSWORD_RESET,
@@ -52,7 +53,7 @@ const UpdatePassword = ({ history }) => {
   return (
     <Fragment>
       {loading ? (
-        <Loader />
+        <h1>Update PASSWORD waiting... ... ...</h1>
       ) : (
         <Fragment>
           <MetaData title="Change Password" />

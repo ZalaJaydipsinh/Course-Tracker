@@ -8,6 +8,9 @@ import CourseDetails from "./component/Course/courseDetails.js";
 import LoginSignUp from "./component/User/LoginSignUp.js";
 import Profile from "./component/User/Profile.js";
 import UpdateProfile from "./component/User/UpdateProfile.js";
+import UpdatePassword from "./component/User/UpdatePassword.js";
+import ForgotPassword from "./component/User/ForgotPassword.js";
+import ResetPassword from "./component/User/ResetPassword.js";
 import UserOptions from "./component/layout/Header/UserOptions";
 import store from "./store.js";
 import { loadUser } from "./actions/userAction";
@@ -32,9 +35,20 @@ function App() {
           <Route index element={<Home />} />
           <Route path="course/:id" element={<CourseDetails />} />
           <Route path="Login/" element={<LoginSignUp />} />
-          <Route path="account/" element={ isAuthenticated ? <Profile /> : <LoginSignUp />} />
-          <Route path="me/update" element={ isAuthenticated ? <UpdateProfile /> : <LoginSignUp />} />
-        
+          <Route
+            path="account/"
+            element={isAuthenticated ? <Profile /> : <LoginSignUp />}
+          />
+          <Route
+            path="me/update"
+            element={isAuthenticated ? <UpdateProfile /> : <LoginSignUp />}
+          />
+          <Route
+            path="password/update"
+            element={isAuthenticated ? <UpdatePassword /> : <LoginSignUp />}
+          />
+          <Route path="password/forgot" element={<ForgotPassword />} />
+          <Route path="password/reset/:token" element={<ResetPassword />} />
         </Route>
       </Routes>
     </BrowserRouter>

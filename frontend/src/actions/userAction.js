@@ -124,7 +124,7 @@ export const updatePassword = (passwords) => async (dispatch) => {
 
     const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.put(
+    const { data } = await axios.post(
       `/api/v1/password/update`,
       passwords,
       config

@@ -1,14 +1,16 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "./ResetPassword.css";
-import Loader from "../layout/Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, resetPassword } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
-import LockIcon from "@material-ui/icons/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import LockIcon from "@mui/icons-material/Lock";
+import { useNavigate, useParams } from "react-router-dom";
 
-const ResetPassword = ({ history, match }) => {
+const ResetPassword = () => {
+  const { token } = useParams();
+  const history = useNavigate();
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -27,7 +29,7 @@ const ResetPassword = ({ history, match }) => {
     myForm.set("password", password);
     myForm.set("confirmPassword", confirmPassword);
 
-    dispatch(resetPassword(match.params.token, myForm));
+    dispatch(resetPassword(token, myForm));
   };
 
   useEffect(() => {
@@ -39,14 +41,14 @@ const ResetPassword = ({ history, match }) => {
     if (success) {
       alert.success("Password Updated Successfully");
 
-      history.push("/login");
+      history("/login");
     }
   }, [dispatch, error, alert, history, success]);
 
   return (
     <Fragment>
       {loading ? (
-        <Loader />
+        <h1>ResetPassword waiting... ... ...</h1>
       ) : (
         <Fragment>
           <MetaData title="Change Password" />

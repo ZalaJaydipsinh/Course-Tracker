@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "./ForgotPassword.css";
-import Loader from "../layout/Loader/Loader";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, forgotPassword } from "../../actions/userAction";
 import { useAlert } from "react-alert";
@@ -40,7 +39,7 @@ const ForgotPassword = () => {
   return (
     <Fragment>
       {loading ? (
-        <Loader />
+        <h1>ForgotPassword waiting ... ... ...</h1>
       ) : (
         <Fragment>
           <MetaData title="Forgot Password" />
