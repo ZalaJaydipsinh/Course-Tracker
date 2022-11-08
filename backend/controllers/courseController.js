@@ -10,8 +10,10 @@ exports.createCourse = catchAsyncErrors(async (req, res, next) => {
     description,
     totalTracks,
     doneTracks,
-    totalDuration,
-    doneDuration,
+    totalHours,
+    totalMinutes,
+    doneHours,
+    doneMinutes,
     tracks,
   } = req.body;
 
@@ -20,8 +22,14 @@ exports.createCourse = catchAsyncErrors(async (req, res, next) => {
     description,
     totalTracks,
     doneTracks,
-    totalDuration,
-    doneDuration,
+    totalDuration:{
+      hours: totalHours,
+      minutes: totalMinutes
+    },
+    doneDuration:{
+      hours: doneHours,
+      minutes: doneMinutes
+    },
     tracks,
     user: req.user._id,
     createdAt: Date.now()

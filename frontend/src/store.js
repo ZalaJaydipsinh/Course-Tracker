@@ -5,7 +5,7 @@ import {
 } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { courseReducer, courseDetailsReducer } from "./reducers/courseReducer";
+import { courseReducer, courseDetailsReducer, newCourseReducer } from "./reducers/courseReducer";
 import { forgotPasswordReducer, profileReducer, userReducer } from "./reducers/userReducer";
 
 const reducer = combineReducers({
@@ -14,6 +14,7 @@ const reducer = combineReducers({
   user: userReducer,
   profile: profileReducer,
   forgotPassword: forgotPasswordReducer,
+  newCourse: newCourseReducer,
 });
 
 let initialState = {};

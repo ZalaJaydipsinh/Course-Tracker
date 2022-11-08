@@ -5,6 +5,10 @@ import {
   COURSE_DETAILS_REQUEST,
   COURSE_DETAILS_FAIL,
   COURSE_DETAILS_SUCCESS,
+  CREATE_COURSE_REQUEST,
+  CREATE_COURSE_SUCCESS,
+  CREATE_COURSE_RESET,
+  CREATE_COURSE_FAIL,
   CLEAR_ERRORS,
 } from "../constants/courseConstants";
 
@@ -36,7 +40,6 @@ export const courseReducer = (state = { courses: [] }, action) => {
   }
 };
 
-
 export const courseDetailsReducer = (state = { course: {} }, action) => {
   switch (action.type) {
     case COURSE_DETAILS_REQUEST:
@@ -59,6 +62,42 @@ export const courseDetailsReducer = (state = { course: {} }, action) => {
         ...state,
         error: null,
       };
+    default:
+      return state;
+  }
+};
+
+export const newCourseReducer = (state = { course:{} }, action) => {
+  switch (action.type) {
+    case CREATE_COURSE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case CREATE_COURSE_SUCCESS:
+      return {
+        loading: false,
+        course: action.payload,
+        sucess: action.payload.sucess,
+      };
+
+    case CREATE_COURSE_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CREATE_COURSE_RESET:
+      return {
+        ...state,
+        sucess: false,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
     default:
       return state;
   }

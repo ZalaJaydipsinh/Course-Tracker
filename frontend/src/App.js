@@ -12,6 +12,7 @@ import UpdatePassword from "./component/User/UpdatePassword.js";
 import ForgotPassword from "./component/User/ForgotPassword.js";
 import ResetPassword from "./component/User/ResetPassword.js";
 import UserOptions from "./component/layout/Header/UserOptions";
+import NewCourse from "./component/Course/NewCourse";
 import store from "./store.js";
 import { loadUser } from "./actions/userAction";
 import { useSelector } from "react-redux";
@@ -49,6 +50,7 @@ function App() {
           />
           <Route path="password/forgot" element={<ForgotPassword />} />
           <Route path="password/reset/:token" element={<ResetPassword />} />
+          <Route path="course/new" element={<NewCourse />} />
         </Route>
       </Routes>
     </BrowserRouter>

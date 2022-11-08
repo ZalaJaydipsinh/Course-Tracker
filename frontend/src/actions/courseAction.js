@@ -7,9 +7,13 @@ import {
   COURSE_DETAILS_REQUEST,
   COURSE_DETAILS_FAIL,
   COURSE_DETAILS_SUCCESS,
+  CREATE_COURSE_REQUEST,
+  CREATE_COURSE_SUCCESS,
+  CREATE_COURSE_FAIL,
   CLEAR_ERRORS,
 } from "../constants/courseConstants";
 
+//get data of all courses
 export const getCourse = () => async (dispatch) => {
   try {
     dispatch({
@@ -29,6 +33,7 @@ export const getCourse = () => async (dispatch) => {
   }
 };
 
+//get particular course details i.e. tracks
 export const getCourseDetails = (id) => async (dispatch) => {
   try {
     dispatch({
@@ -42,6 +47,27 @@ export const getCourseDetails = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: COURSE_DETAILS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Create Course
+export const createCourse = (course) => async (dispatch) => {
+  try {
+    dispatch({ type: CREATE_COURSE_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.post("/api/v1/course/new", course, config);
+
+    dispatch({ type: CREATE_COURSE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: CREATE_COURSE_FAIL,
       payload: error.response.data.message,
     });
   }
