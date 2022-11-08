@@ -9,6 +9,10 @@ import {
   CREATE_COURSE_SUCCESS,
   CREATE_COURSE_RESET,
   CREATE_COURSE_FAIL,
+  CREATE_TRACK_REQUEST,
+  CREATE_TRACK_SUCCESS,
+  CREATE_TRACK_RESET,
+  CREATE_TRACK_FAIL,
   CLEAR_ERRORS,
 } from "../constants/courseConstants";
 
@@ -88,6 +92,43 @@ export const newCourseReducer = (state = { course:{} }, action) => {
         error: action.payload,
       };
     case CREATE_COURSE_RESET:
+      return {
+        ...state,
+        sucess: false,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
+
+export const newTrackReducer = (state = { track:{} }, action) => {
+  switch (action.type) {
+    case CREATE_TRACK_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case CREATE_TRACK_SUCCESS:
+      return {
+        loading: false,
+        track: action.payload,
+        sucess: action.payload.sucess,
+      };
+
+    case CREATE_TRACK_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CREATE_TRACK_RESET:
       return {
         ...state,
         sucess: false,

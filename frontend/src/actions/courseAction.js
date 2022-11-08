@@ -10,6 +10,9 @@ import {
   CREATE_COURSE_REQUEST,
   CREATE_COURSE_SUCCESS,
   CREATE_COURSE_FAIL,
+  CREATE_TRACK_REQUEST,
+  CREATE_TRACK_SUCCESS,
+  CREATE_TRACK_FAIL,
   CLEAR_ERRORS,
 } from "../constants/courseConstants";
 
@@ -78,4 +81,26 @@ export const clearErrors = () => async (dispatch) => {
   dispatch({
     type: CLEAR_ERRORS,
   });
+};
+
+
+// Create Track
+export const createTrack = (track) => async (dispatch) => {
+  try {
+    dispatch({ type: CREATE_TRACK_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.post("/api/v1/track/new", track, config);
+
+    dispatch({ type: CREATE_TRACK_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: CREATE_TRACK_FAIL,
+      payload: error.response.data.message,
+    });
+  }
 };

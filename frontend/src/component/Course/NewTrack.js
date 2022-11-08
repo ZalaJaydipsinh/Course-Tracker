@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./NewCourse.css";
+import "./NewTrack.css";
 import {
   Grid,
   TextField,
@@ -10,25 +10,35 @@ import {
 } from "@mui/material";
 import { useAlert } from "react-alert";
 import { useSelector, useDispatch } from "react-redux";
-import { CREATE_COURSE_RESET } from "../../constants/courseConstants";
+import { CREATE_TRACK_RESET } from "../../constants/courseConstants";
 import { useNavigate } from "react-router-dom";
 import { clearErrors, createCourse } from "../../actions/courseAction.js";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
-const NewCourse = () => {
+const NewTrack = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
   const alert = useAlert();
-  const { loading, error, success } = useSelector((state) => state.newCourse);
+  const { loading, error, success } = useSelector((state) => state.newTrack);
 
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [totalTracks, setTotalTracks] = useState(0);
-  const [doneTracks, setDoneTracks] = useState(0);
+  const [note, setNote] = useState("");
+  const [url, setUrl] = useState(0);
   const [totalHours, setTotalHours] = useState(0);
   const [totalMinutes, setTotalMinutes] = useState(0);
-  const [doneHours, setDoneHours] = useState(0);
-  const [doneMinutes, setDoneMinutes] = useState(0);
 
+  const [completed, setCompleted] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+
+  const handleChangeCompleted = (event) => {
+    setCompleted(event.target.checked);
+  };
+  const handleChangeBookmarked = (event) => {
+    setBookmarked(event.target.checked);
+  };
   useEffect(() => {
     if (error) {
       alert.error(error);
@@ -36,9 +46,9 @@ const NewCourse = () => {
     }
 
     if (success) {
-      alert.success("Course Created Successfully");
+      alert.success("Track added Successfully");
       history("/");
-      dispatch({ type: CREATE_COURSE_RESET });
+      dispatch({ type: CREATE_TRACK_RESET });
     }
   }, [dispatch, alert, error, history, success]);
 
@@ -48,24 +58,23 @@ const NewCourse = () => {
     const myForm = new FormData();
 
     myForm.set("name", name);
-    myForm.set("description", description);
-    myForm.set("totalTracks", totalTracks);
-    myForm.set("doneTracks", doneTracks);
+    myForm.set("notes", note);
+    myForm.set("url", url);
     myForm.set("totalHours", totalHours);
     myForm.set("totalMinutes", totalMinutes);
-    myForm.set("doneHours", doneHours);
-    myForm.set("doneMinutes", doneMinutes);
+    myForm.set("done", completed);
+    myForm.set("bookmark", bookmarked);
 
     dispatch(createCourse(myForm));
   };
 
   return (
-    <div className="App">
+    <div className="track">
       <Grid>
         <Card style={{ maxWidth: 450, padding: "20px 5px", margin: "0 auto" }}>
           <CardContent>
             <Typography gutterBottom variant="h5">
-              New Course Details
+              New Track Details
             </Typography>
 
             <form
@@ -77,7 +86,7 @@ const NewCourse = () => {
                   <TextField
                     label="Name"
                     variant="outlined"
-                    placeholder="Enter course Name"
+                    placeholder="Enter track Name"
                     fullWidth
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -85,39 +94,22 @@ const NewCourse = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    label="Description"
+                    label="Note"
                     multiline
                     rows={4}
-                    placeholder="Enter course Description"
+                    placeholder="Enter track Note"
                     variant="outlined"
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={(e) => setNote(e.target.value)}
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <TextField
-                    type="number"
-                    placeholder="Total Tracks"
-                    label="Total Tracks"
+                    type="url"
+                    placeholder="URL for the Track"
+                    label="URL"
                     variant="outlined"
-                    value={totalTracks}
-                    onChange={(e) => setTotalTracks(e.target.value)}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    type="number"
-                    placeholder="Done Tracks"
-                    label="Completed Tracks"
-                    variant="outlined"
-                    value={doneTracks}
-                    onChange={(e) => {
-                      if (parseInt(e.target.value) > parseInt(totalTracks))
-                        return;
-
-                      return setDoneTracks(e.target.value);
-                    }}
+                    onChange={(e) => setUrl(e.target.value)}
                     fullWidth
                   />
                 </Grid>
@@ -144,27 +136,29 @@ const NewCourse = () => {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} className="para">
-                  Done Duration
-                </Grid>
+
                 <Grid item xs={6}>
-                  <TextField
-                    type="number"
-                    placeholder="HH"
-                    label="Hours"
-                    variant="outlined"
-                    onChange={(e) => setDoneHours(e.target.value)}
-                    fullWidth
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={completed}
+                        onChange={handleChangeCompleted}
+                      />
+                    }
+                    label="Completed"
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
-                    type="number"
-                    placeholder="MM"
-                    label="Minutes"
-                    variant="outlined"
-                    onChange={(e) => setDoneMinutes(e.target.value)}
-                    fullWidth
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={bookmarked}
+                        onChange={handleChangeBookmarked}
+                        icon={<BookmarkBorderIcon />}
+                        checkedIcon={<BookmarkIcon />}
+                      />
+                    }
+                    label="Bookmarked"
                   />
                 </Grid>
 
@@ -175,7 +169,7 @@ const NewCourse = () => {
                     variant="contained"
                     fullWidth
                   >
-                    Create
+                    Add Track
                   </Button>
                 </Grid>
               </Grid>
@@ -187,4 +181,4 @@ const NewCourse = () => {
   );
 };
 
-export default NewCourse;
+export default NewTrack;
