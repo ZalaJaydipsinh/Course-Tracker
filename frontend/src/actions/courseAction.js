@@ -13,6 +13,14 @@ import {
   CREATE_TRACK_REQUEST,
   CREATE_TRACK_SUCCESS,
   CREATE_TRACK_FAIL,
+  DELETE_COURSE_REQUEST,
+  DELETE_COURSE_SUCCESS,
+  DELETE_COURSE_RESET,
+  DELETE_COURSE_FAIL,
+  UPDATE_COURSE_REQUEST,
+  UPDATE_COURSE_SUCCESS,
+  UPDATE_COURSE_RESET,
+  UPDATE_COURSE_FAIL,
   CLEAR_ERRORS,
 } from "../constants/courseConstants";
 
@@ -81,6 +89,25 @@ export const clearErrors = () => async (dispatch) => {
   dispatch({
     type: CLEAR_ERRORS,
   });
+};
+
+// Delete Course
+export const deleteCourse = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: DELETE_COURSE_REQUEST });
+
+    const { data } = await axios.delete(`/api/v1/course/${id}`);
+
+    dispatch({
+      type: DELETE_COURSE_SUCCESS,
+      payload: data.sucess,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_COURSE_FAIL,
+      payload: error.response.data.message,
+    });
+  }
 };
 
 

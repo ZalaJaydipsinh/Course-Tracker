@@ -5,12 +5,13 @@ import {
 } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { courseReducer, courseDetailsReducer, newCourseReducer, newTrackReducer } from "./reducers/courseReducer";
+import { coursesReducer, courseDetailsReducer, newCourseReducer, newTrackReducer, courseReducer } from "./reducers/courseReducer";
 import { forgotPasswordReducer, profileReducer, userReducer } from "./reducers/userReducer";
 
 const reducer = combineReducers({
-  courses: courseReducer,
+  courses: coursesReducer,
   courseDetails: courseDetailsReducer,
+  course: courseReducer,
   user: userReducer,
   profile: profileReducer,
   forgotPassword: forgotPasswordReducer,

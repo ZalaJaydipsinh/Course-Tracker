@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import "./CourseSpeedDial.css";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
@@ -7,9 +7,11 @@ import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
 import NoteAltIcon from "@mui/icons-material/NoteAlt";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import { DELETE_COURSE_RESET } from "../../constants/courseConstants";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
+import { deleteCourse, clearErrors } from "../../actions/courseAction";
 
 const CourseSpeedDial = ({ courseId, courseName }) => {
   const [open, setOpen] = useState(false);
@@ -17,9 +19,12 @@ const CourseSpeedDial = ({ courseId, courseName }) => {
   const alert = useAlert();
   const dispatch = useDispatch();
 
+  const { error, isDeleted } = useSelector((state) => state.course);
+
   const options = [
     { icon: <AddIcon />, name: "Add Track", func: addTrack },
     { icon: <NoteAltIcon />, name: "Update Course", func: updateCourse },
+    { icon: <CancelIcon />, name: "Delete Course", func: deleteTheCourse },
   ];
 
   function addTrack() {
@@ -27,12 +32,30 @@ const CourseSpeedDial = ({ courseId, courseName }) => {
       state: { courseId: courseId, courseName: courseName },
     });
   }
-  function deleteCourse() {}
+  function deleteTheCourse() {
+    dispatch(deleteCourse(courseId));
+    // console.log(courseId);
+  }
 
   function updateCourse() {
     // dispatch(logout());
     alert.success("Logout Successfully");
   }
+
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
+
+    if (isDeleted) {
+      history("/");
+      alert.success("Course Deleted Successfully");
+      dispatch({ type: DELETE_COURSE_RESET });
+    }
+
+  }, [dispatch, alert, error, history, isDeleted]);
 
   return (
     <Fragment>

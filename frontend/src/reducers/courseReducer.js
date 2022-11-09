@@ -13,10 +13,20 @@ import {
   CREATE_TRACK_SUCCESS,
   CREATE_TRACK_RESET,
   CREATE_TRACK_FAIL,
+
+  DELETE_COURSE_REQUEST,
+  DELETE_COURSE_SUCCESS,
+  DELETE_COURSE_RESET,
+  DELETE_COURSE_FAIL,
+  UPDATE_COURSE_REQUEST,
+  UPDATE_COURSE_SUCCESS,
+  UPDATE_COURSE_RESET,
+  UPDATE_COURSE_FAIL,
+  
   CLEAR_ERRORS,
 } from "../constants/courseConstants";
 
-export const courseReducer = (state = { courses: [] }, action) => {
+export const coursesReducer = (state = { courses: [] }, action) => {
   switch (action.type) {
     case ALL_COURSE_REQUEST:
       return {
@@ -71,7 +81,7 @@ export const courseDetailsReducer = (state = { course: {} }, action) => {
   }
 };
 
-export const newCourseReducer = (state = { course:{} }, action) => {
+export const newCourseReducer = (state = { course: {} }, action) => {
   switch (action.type) {
     case CREATE_COURSE_REQUEST:
       return {
@@ -107,8 +117,55 @@ export const newCourseReducer = (state = { course:{} }, action) => {
   }
 };
 
+export const courseReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_COURSE_REQUEST:
+    case UPDATE_COURSE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case DELETE_COURSE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isDeleted: action.payload,
+      };
 
-export const newTrackReducer = (state = { track:{} }, action) => {
+    case UPDATE_COURSE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isUpdated: action.payload,
+      };
+    case DELETE_COURSE_FAIL:
+    case UPDATE_COURSE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case DELETE_COURSE_RESET:
+      return {
+        ...state,
+        isDeleted: false,
+      };
+    case UPDATE_COURSE_RESET:
+      return {
+        ...state,
+        isUpdated: false,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export const newTrackReducer = (state = { track: {} }, action) => {
   switch (action.type) {
     case CREATE_TRACK_REQUEST:
       return {
