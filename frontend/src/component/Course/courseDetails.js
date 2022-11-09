@@ -5,6 +5,7 @@ import MetaData from "../layout/MetaData";
 import { clearErrors, getCourseDetails } from "../../actions/courseAction";
 import { useParams } from "react-router-dom";
 import "./courseDetails.css";
+import CourseSpeedDial from "./CourseSpeedDial";
 
 const CourseDetails = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const CourseDetails = () => {
       ) : (
         <React.Fragment>
           <MetaData title={"Course Details"} />
+          <CourseSpeedDial courseId={id} courseName={course.name}/>
           <table>
             <caption>{course? course.name:"Course Not Found"}</caption>
             <thead>
@@ -42,7 +44,7 @@ const CourseDetails = () => {
             <tbody>
               {course && course.tracks && course.tracks.map((track) => (
                 <React.Fragment>
-                  <tr>
+                  <tr key={track.id}>
                     <td>
                       {" "}
                       {track.name} <br />

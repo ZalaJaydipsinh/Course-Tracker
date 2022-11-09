@@ -119,8 +119,8 @@ export const newTrackReducer = (state = { track:{} }, action) => {
     case CREATE_TRACK_SUCCESS:
       return {
         loading: false,
-        track: action.payload,
-        sucess: action.payload.sucess,
+        track: action.payload.track,
+        success: action.payload.success,
       };
 
     case CREATE_TRACK_FAIL:

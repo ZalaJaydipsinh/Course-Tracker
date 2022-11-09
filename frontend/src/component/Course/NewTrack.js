@@ -11,8 +11,8 @@ import {
 import { useAlert } from "react-alert";
 import { useSelector, useDispatch } from "react-redux";
 import { CREATE_TRACK_RESET } from "../../constants/courseConstants";
-import { useNavigate } from "react-router-dom";
-import { clearErrors, createCourse } from "../../actions/courseAction.js";
+import { useLocation, useNavigate } from "react-router-dom";
+import { clearErrors, createTrack } from "../../actions/courseAction.js";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -21,12 +21,16 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 const NewTrack = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const alert = useAlert();
   const { loading, error, success } = useSelector((state) => state.newTrack);
 
+  const [courseId, setCourseId] = useState(
+    location ? location.state.courseId : ""
+  );
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
-  const [url, setUrl] = useState(0);
+  const [url, setUrl] = useState();
   const [totalHours, setTotalHours] = useState(0);
   const [totalMinutes, setTotalMinutes] = useState(0);
 
@@ -47,25 +51,26 @@ const NewTrack = () => {
 
     if (success) {
       alert.success("Track added Successfully");
-      history("/");
+      history(`/course/${courseId}`);
       dispatch({ type: CREATE_TRACK_RESET });
     }
   }, [dispatch, alert, error, history, success]);
 
-  const createCourseSubmitHandler = (e) => {
+  const createTrackSubmitHandler = (e) => {
     e.preventDefault();
 
     const myForm = new FormData();
-
+    setCourseId(location.state.courseId);
     myForm.set("name", name);
     myForm.set("notes", note);
     myForm.set("url", url);
-    myForm.set("totalHours", totalHours);
-    myForm.set("totalMinutes", totalMinutes);
-    myForm.set("done", completed);
-    myForm.set("bookmark", bookmarked);
+    myForm.set("hours", totalHours);
+    myForm.set("minutes", totalMinutes);
+    myForm.set("done", completed ? "1" : "");
+    myForm.set("bookmark", bookmarked ? "1" : "");
+    myForm.set("courseId", courseId);
 
-    dispatch(createCourse(myForm));
+    dispatch(createTrack(myForm));
   };
 
   return (
@@ -73,12 +78,14 @@ const NewTrack = () => {
       <Grid>
         <Card style={{ maxWidth: 450, padding: "20px 5px", margin: "0 auto" }}>
           <CardContent>
-            <Typography gutterBottom variant="h5">
+            <Typography gutterBottom variant="h4">
+              {location && location.state.courseName}
+            </Typography>
+            <Typography gutterBottom variant="h6">
               New Track Details
             </Typography>
-
             <form
-              onSubmit={createCourseSubmitHandler}
+              onSubmit={createTrackSubmitHandler}
               encType="multipart/form-data"
             >
               <Grid container spacing={1}>
