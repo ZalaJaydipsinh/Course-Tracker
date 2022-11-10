@@ -30,8 +30,6 @@ router.route("/course/new").post(isAuthenticatedUser, createCourse);
 
 router.route("/tracks").get(isAuthenticatedUser, getAllTracks);
 router.route("/track/new").post(isAuthenticatedUser,createTrack);
-router.route("/track/delete/:id/:tid").delete(isAuthenticatedUser,deleteTrack);
-
-router.route("/track/:id/:tid").get(getTrackDetails);
+router.route("/track/:id/:tid").get(getTrackDetails).delete(isAuthenticatedUser,deleteTrack);
 
 module.exports = router;

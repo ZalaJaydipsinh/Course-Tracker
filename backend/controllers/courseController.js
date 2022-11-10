@@ -192,12 +192,12 @@ exports.createTrack = catchAsyncErrors(async (req, res, next) => {
         course.addTotalDuration(hours, minutes);
 
         track.name = name;
-        track.done = done;
-        track.bookmark = bookmark;
+        track.done = Boolean(done);
+        track.bookmark = Boolean(bookmark);
         track.notes = notes;
         track.url = url;
-        track.totalDuration.hours = hours;
-        track.totalDuration.minutes = minutes;
+        track.totalDuration.hours = Number(hours);
+        track.totalDuration.minutes =  Number(minutes);
       }
     });
   } else {
@@ -233,7 +233,6 @@ exports.getTrackDetails = catchAsyncErrors(async (req, res, next) => {
   let trackDetails;
   if (req.params.tid && course) {
     course.tracks.some((track) => {
-      console.log(track._id.toString(),req.params.tid);
       if (track._id.toString() === req.params.tid) {
         trackDetails = track;
         return true;

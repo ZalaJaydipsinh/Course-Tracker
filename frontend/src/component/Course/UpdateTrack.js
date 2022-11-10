@@ -10,12 +10,16 @@ import {
 } from "@mui/material";
 import { useAlert } from "react-alert";
 import { useSelector, useDispatch } from "react-redux";
-import { CREATE_TRACK_RESET } from "../../constants/courseConstants";
+import {
+  UPDATE_TRACK_RESET,
+  TRACK_DETAILS_RESET,
+} from "../../constants/courseConstants";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   clearErrors,
   getTrackDetails,
   deleteTrack,
+  updateTrack,
 } from "../../actions/courseAction.js";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -27,7 +31,12 @@ const UpdateTrack = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const alert = useAlert();
-  const { loading, error, success } = useSelector((state) => state.newTrack);
+  const { error, isUpdated, loading } = useSelector((state) => state.track);
+  const {
+    loading: TrackDetailsLoading,
+    track,
+    error: TrackDetailsError,
+  } = useSelector((state) => state.trackDetails);
 
   const [courseId, setCourseId] = useState(
     location ? location.state.courseId : ""
@@ -44,22 +53,16 @@ const UpdateTrack = () => {
   const [completed, setCompleted] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
-  const {
-    loading: TrackDetailsLoading,
-    track,
-    error: TrackDetailsError,
-  } = useSelector((state) => state.trackDetails);
-
   const handleChangeCompleted = (event) => {
     setCompleted(event.target.checked);
   };
   const handleChangeBookmarked = (event) => {
     setBookmarked(event.target.checked);
   };
-  const deleteThisTrack = ()=>{
-    dispatch(deleteTrack(courseId,trackId));
+  const deleteThisTrack = () => {
+    dispatch(deleteTrack(courseId, trackId));
     history(`/course/${courseId}`);
-  }
+  };
   useEffect(() => {
     if (
       (track &&
@@ -68,14 +71,14 @@ const UpdateTrack = () => {
       !track
     ) {
       dispatch(getTrackDetails(courseId, trackId));
-    }else{
-        setName(track.name);
-        setNote(track.note);
-        setUrl(track.url);
-        setTotalHours(track.totalHours);
-        setTotalMinutes(track.totalMinutes);
-        setCompleted(track.done);
-        setBookmarked(track.bookmark);
+    } else {
+      setName(track.name);
+      setNote(track.notes);
+      setUrl(track.url);
+      setTotalHours(track.totalDuration.hours);
+      setTotalMinutes(track.totalDuration.minutes);
+      setCompleted(track.done);
+      setBookmarked(track.bookmark);
     }
 
     if (error) {
@@ -83,18 +86,20 @@ const UpdateTrack = () => {
       dispatch(clearErrors());
     }
 
-    if (success) {
-      alert.success("Track added Successfully");
+    if (isUpdated) {
+      alert.success("Track updated Successfully");
+      dispatch({ type: UPDATE_TRACK_RESET });
+      dispatch({ type: TRACK_DETAILS_RESET });
       history(`/course/${courseId}`);
-      dispatch({ type: CREATE_TRACK_RESET });
     }
-  }, [dispatch, alert, error, history, success, track]);
+  }, [dispatch, alert, error, history, isUpdated, track]);
 
-  const createTrackSubmitHandler = (e) => {
+  const updateTrackSubmitHandler = (e) => {
     e.preventDefault();
 
     const myForm = new FormData();
     setCourseId(location.state.courseId);
+
     myForm.set("name", name);
     myForm.set("notes", note);
     myForm.set("url", url);
@@ -103,8 +108,9 @@ const UpdateTrack = () => {
     myForm.set("done", completed ? "1" : "");
     myForm.set("bookmark", bookmarked ? "1" : "");
     myForm.set("courseId", courseId);
+    myForm.set("trackId", trackId);
 
-    // dispatch(createTrack(myForm));
+    dispatch(updateTrack(myForm));
   };
 
   return (
@@ -124,7 +130,7 @@ const UpdateTrack = () => {
                 </Typography>
 
                 <form
-                  onSubmit={createTrackSubmitHandler}
+                  onSubmit={updateTrackSubmitHandler}
                   encType="multipart/form-data"
                 >
                   <Grid container spacing={1}>
@@ -172,7 +178,6 @@ const UpdateTrack = () => {
                         label="Hours"
                         variant="outlined"
                         value={totalHours}
-
                         onChange={(e) => setTotalHours(e.target.value)}
                         fullWidth
                       />

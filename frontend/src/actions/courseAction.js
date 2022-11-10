@@ -170,12 +170,33 @@ export const createTrack = (track) => async (dispatch) => {
   }
 };
 
+// Update Track
+export const updateTrack = (track) => async (dispatch) => {
+  try {
+    dispatch({ type: UPDATE_TRACK_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.post("/api/v1/track/new", track, config);
+
+    dispatch({ type: UPDATE_TRACK_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_TRACK_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
 // Delete track
 export const deleteTrack = (id,tid) => async (dispatch) => {
   try {
     dispatch({ type: DELETE_TRACK_REQUEST });
 
-    const { data } = await axios.delete(`/api/v1/track/delete/${id}/${tid}`);
+    const { data } = await axios.delete(`/api/v1/track/${id}/${tid}`);
 
     dispatch({
       type: DELETE_TRACK_SUCCESS,

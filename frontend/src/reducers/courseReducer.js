@@ -276,6 +276,11 @@ export const trackDetailsReducer = (state = { track: {} }, action) => {
         loading: false,
         error: action.payload,
       };
+    case TRACK_DETAILS_RESET:
+      return {
+        loading: false,
+        track: {},
+      };
     case CLEAR_ERRORS:
       return {
         ...state,

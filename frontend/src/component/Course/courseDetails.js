@@ -9,7 +9,7 @@ import CourseSpeedDial from "./CourseSpeedDial";
 import { Link, useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-
+import { TRACK_DETAILS_RESET } from "../../constants/courseConstants";
 const CourseDetails = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
@@ -24,6 +24,8 @@ const CourseDetails = () => {
       alert.error(error);
       dispatch(clearErrors());
     }
+    dispatch({ type: TRACK_DETAILS_RESET });
+
     dispatch(getCourseDetails(id));
   }, [dispatch]);
 
@@ -70,8 +72,10 @@ const CourseDetails = () => {
                           : ""}
                       </td>
                       <td>{track.done ? "Completed" : "not"}</td>
-                      <td>{track.bookmark ? "marked" : "not"}</td>
-                      <td>{track.notes}</td>
+                      <td>
+                        {track.bookmark ? "marked" : "not"} {track.url}
+                      </td>
+                      <td>{track.notes} </td>
                       <td>
                         <Button
                           variant="contained"
