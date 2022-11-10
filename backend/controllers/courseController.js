@@ -96,7 +96,6 @@ exports.updateCourse = catchAsyncErrors(async (req, res, next) => {
     totalMinutes,
     doneHours,
     doneMinutes,
-    tracks,
   } = req.body;
 
   course = await Course.findByIdAndUpdate(
@@ -114,7 +113,6 @@ exports.updateCourse = catchAsyncErrors(async (req, res, next) => {
         hours: doneHours,
         minutes: doneMinutes,
       },
-      tracks,
       createdAt: Date.now(),
     },
     {

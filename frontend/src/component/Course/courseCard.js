@@ -31,11 +31,6 @@ export default function CourseCard({ course }) {
           >
             {course.description}
           </Typography>
-          <Link to={`/course/update/${course._id}`}>
-            <Typography component="div" variant="h5">
-              Update it
-            </Typography>
-          </Link>
         </CardContent>
       </Box>
     </Card>

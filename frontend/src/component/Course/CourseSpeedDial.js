@@ -38,8 +38,7 @@ const CourseSpeedDial = ({ courseId, courseName }) => {
   }
 
   function updateCourse() {
-    // dispatch(logout());
-    alert.success("Logout Successfully");
+    history(`/course/update/${courseId}`);
   }
 
 

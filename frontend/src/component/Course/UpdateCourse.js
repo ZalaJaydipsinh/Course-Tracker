@@ -42,7 +42,26 @@ const UpdateCourse = () => {
   const [doneMinutes, setDoneMinutes] = useState(0);
 
   useEffect(() => {
+    if (
+      (course &&
+        Object.keys(course).length === 0 &&
+        Object.getPrototypeOf(course) === Object.prototype) ||
+      !course
+    ) {
+      dispatch(getCourseDetails(id));
+    } else {
+      setName(course.name);
+      setDescription(course.description);
+      setTotalTracks(course.totalTracks);
+      setDoneTracks(course.doneTracks);
+      setTotalHours(course.totalDuration.hours);
+      setTotalMinutes(course.totalDuration.minutes);
+      setDoneHours(course.doneDuration.hours);
+      setDoneMinutes(course.doneDuration.minutes);
+    }
+
     if (error) {
+      console.log(error);
       alert.error(error);
       dispatch(clearErrors());
     }
@@ -52,10 +71,9 @@ const UpdateCourse = () => {
       history("/");
       dispatch({ type: UPDATE_COURSE_RESET });
     }
-    dispatch(getCourseDetails(id));
-  }, [dispatch, alert, error, history, isUpdated]);
+  }, [dispatch, alert, error, history, isUpdated, course]);
 
-  const createCourseSubmitHandler = (e) => {
+  const updateCourseSubmitHandler = (e) => {
     e.preventDefault();
 
     const myForm = new FormData();
@@ -68,13 +86,12 @@ const UpdateCourse = () => {
     myForm.set("totalMinutes", totalMinutes);
     myForm.set("doneHours", doneHours);
     myForm.set("doneMinutes", doneMinutes);
-
-    dispatch(updateCourse(myForm));
+    dispatch(updateCourse(id, myForm));
   };
 
   return (
     <>
-      {loading ? (
+      {CourseDetailsLoading ? (
         <h1>UpdateCourse waiting ... ... ...</h1>
       ) : (
         <div>
@@ -83,7 +100,7 @@ const UpdateCourse = () => {
               style={{ maxWidth: 450, padding: "20px 5px", margin: "0 auto" }}
             >
               <CardContent>
-              <Typography gutterBottom variant="h4">
+                <Typography gutterBottom variant="h4">
                   {course && course.name}
                 </Typography>
                 <Typography gutterBottom variant="h6">
@@ -91,7 +108,7 @@ const UpdateCourse = () => {
                 </Typography>
 
                 <form
-                  onSubmit={createCourseSubmitHandler}
+                  onSubmit={updateCourseSubmitHandler}
                   encType="multipart/form-data"
                 >
                   <Grid container spacing={1}>
@@ -101,7 +118,7 @@ const UpdateCourse = () => {
                         variant="outlined"
                         placeholder="Enter course Name"
                         fullWidth
-                        value={course && course.name}
+                        value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
                       />
@@ -113,7 +130,7 @@ const UpdateCourse = () => {
                         rows={4}
                         placeholder="Enter course Description"
                         variant="outlined"
-                        value={course && course.description}
+                        value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         fullWidth
                       />
@@ -124,7 +141,7 @@ const UpdateCourse = () => {
                         placeholder="Total Tracks"
                         label="Total Tracks"
                         variant="outlined"
-                        value={course && course.totalTracks}
+                        value={totalTracks}
                         onChange={(e) => setTotalTracks(e.target.value)}
                         fullWidth
                       />
@@ -135,7 +152,7 @@ const UpdateCourse = () => {
                         placeholder="Done Tracks"
                         label="Completed Tracks"
                         variant="outlined"
-                        value={course && course.doneTracks}
+                        value={doneTracks}
                         onChange={(e) => {
                           if (parseInt(e.target.value) > parseInt(totalTracks))
                             return;
@@ -154,7 +171,7 @@ const UpdateCourse = () => {
                         placeholder="HH"
                         label="Hours"
                         variant="outlined"
-                        value={course && course.totalDuration.hours}
+                        value={totalHours}
                         onChange={(e) => setTotalHours(e.target.value)}
                         fullWidth
                       />
@@ -165,7 +182,7 @@ const UpdateCourse = () => {
                         placeholder="MM"
                         label="Minutes"
                         variant="outlined"
-                        value={course && course.totalDuration.minutes}
+                        value={totalMinutes}
                         onChange={(e) => setTotalMinutes(e.target.value)}
                         fullWidth
                       />
@@ -179,7 +196,7 @@ const UpdateCourse = () => {
                         placeholder="HH"
                         label="Hours"
                         variant="outlined"
-                        value={course && course.doneDuration.hours}
+                        value={doneHours}
                         onChange={(e) => setDoneHours(e.target.value)}
                         fullWidth
                       />
@@ -190,7 +207,7 @@ const UpdateCourse = () => {
                         placeholder="MM"
                         label="Minutes"
                         variant="outlined"
-                        value={course && course.doneDuration.minutes}
+                        value={doneMinutes}
                         onChange={(e) => setDoneMinutes(e.target.value)}
                         fullWidth
                       />
