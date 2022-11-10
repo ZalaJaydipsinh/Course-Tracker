@@ -228,16 +228,42 @@ exports.getAllTracks = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+exports.getTrackDetails = catchAsyncErrors(async (req, res, next) => {
+  const course = await Course.findById(req.params.id);
+  let trackDetails;
+  if (req.params.tid && course) {
+    course.tracks.some((track) => {
+      console.log(track._id.toString(),req.params.tid);
+      if (track._id.toString() === req.params.tid) {
+        trackDetails = track;
+        return true;
+      }
+    });
+  }
+
+  if (!trackDetails) {
+    return next(new ErrorHandler("Track not found.", 404));
+  }
+  if(!course){
+    return next(new ErrorHandler("Course not found.", 404));
+  }
+
+  res.status(200).json({
+    sucess: true,
+    trackDetails,
+  });
+});
+
 //Delete a track
 exports.deleteTrack = catchAsyncErrors(async (req, res, next) => {
-  const course = await Course.findById(req.query.courseId);
+  const course = await Course.findById(req.params.id);
 
   if (!course) {
     return next(new ErrorHandler("Course not found", 404));
   }
 
   const tracks = course.tracks.filter(
-    (track) => track._id.toString() !== req.query.id.toString()
+    (track) => track._id.toString() !== req.params.tid.toString()
   );
 
   let totalTracks = tracks.length;
@@ -263,7 +289,7 @@ exports.deleteTrack = catchAsyncErrors(async (req, res, next) => {
   dM = dM % 60;
 
   await Course.findByIdAndUpdate(
-    req.query.courseId,
+    req.params.id,
     {
       tracks,
       totalDuration: {
@@ -279,7 +305,6 @@ exports.deleteTrack = catchAsyncErrors(async (req, res, next) => {
     },
     {
       new: true,
-      runValidators: true,
       useFindAndModify: false,
     }
   );

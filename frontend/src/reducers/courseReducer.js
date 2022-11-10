@@ -13,7 +13,6 @@ import {
   CREATE_TRACK_SUCCESS,
   CREATE_TRACK_RESET,
   CREATE_TRACK_FAIL,
-
   DELETE_COURSE_REQUEST,
   DELETE_COURSE_SUCCESS,
   DELETE_COURSE_RESET,
@@ -22,7 +21,18 @@ import {
   UPDATE_COURSE_SUCCESS,
   UPDATE_COURSE_RESET,
   UPDATE_COURSE_FAIL,
-  
+  UPDATE_TRACK_REQUEST,
+  UPDATE_TRACK_SUCCESS,
+  UPDATE_TRACK_RESET,
+  UPDATE_TRACK_FAIL,
+  DELETE_TRACK_REQUEST,
+  DELETE_TRACK_SUCCESS,
+  DELETE_TRACK_RESET,
+  DELETE_TRACK_FAIL,
+  TRACK_DETAILS_REQUEST,
+  TRACK_DETAILS_SUCCESS,
+  TRACK_DETAILS_RESET,
+  TRACK_DETAILS_FAIL,
   CLEAR_ERRORS,
 } from "../constants/courseConstants";
 
@@ -93,7 +103,7 @@ export const newCourseReducer = (state = { course: {} }, action) => {
       return {
         loading: false,
         course: action.payload,
-        sucess: action.payload.sucess,
+        success: action.payload.sucess,
       };
 
     case CREATE_COURSE_FAIL:
@@ -196,6 +206,81 @@ export const newTrackReducer = (state = { track: {} }, action) => {
         error: null,
       };
 
+    default:
+      return state;
+  }
+};
+
+export const trackReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_TRACK_REQUEST:
+    case UPDATE_TRACK_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case DELETE_TRACK_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isDeleted: action.payload,
+      };
+
+    case UPDATE_TRACK_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isUpdated: action.payload,
+      };
+    case DELETE_TRACK_FAIL:
+    case UPDATE_TRACK_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case DELETE_TRACK_RESET:
+      return {
+        ...state,
+        isDeleted: false,
+      };
+    case UPDATE_TRACK_RESET:
+      return {
+        ...state,
+        isUpdated: false,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export const trackDetailsReducer = (state = { track: {} }, action) => {
+  switch (action.type) {
+    case TRACK_DETAILS_REQUEST:
+      return {
+        loading: true,
+        ...state,
+      };
+    case TRACK_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        track: action.payload,
+      };
+    case TRACK_DETAILS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
     default:
       return state;
   }

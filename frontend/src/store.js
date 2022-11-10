@@ -5,7 +5,7 @@ import {
 } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { coursesReducer, courseDetailsReducer, newCourseReducer, newTrackReducer, courseReducer } from "./reducers/courseReducer";
+import { coursesReducer, courseDetailsReducer, newCourseReducer, newTrackReducer, courseReducer, trackReducer, trackDetailsReducer } from "./reducers/courseReducer";
 import { forgotPasswordReducer, profileReducer, userReducer } from "./reducers/userReducer";
 
 const reducer = combineReducers({
@@ -17,6 +17,8 @@ const reducer = combineReducers({
   forgotPassword: forgotPasswordReducer,
   newCourse: newCourseReducer,
   newTrack: newTrackReducer,
+  track: trackReducer,
+  trackDetails: trackDetailsReducer,
 });
 
 let initialState = {};

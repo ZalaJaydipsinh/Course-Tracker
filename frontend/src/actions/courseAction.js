@@ -21,6 +21,18 @@ import {
   UPDATE_COURSE_SUCCESS,
   UPDATE_COURSE_RESET,
   UPDATE_COURSE_FAIL,
+  UPDATE_TRACK_REQUEST,
+  UPDATE_TRACK_SUCCESS,
+  UPDATE_TRACK_RESET,
+  UPDATE_TRACK_FAIL,
+  DELETE_TRACK_REQUEST,
+  DELETE_TRACK_SUCCESS,
+  DELETE_TRACK_RESET,
+  DELETE_TRACK_FAIL,
+  TRACK_DETAILS_REQUEST,
+  TRACK_DETAILS_SUCCESS,
+  TRACK_DETAILS_RESET,
+  TRACK_DETAILS_FAIL,
   CLEAR_ERRORS,
 } from "../constants/courseConstants";
 
@@ -153,6 +165,44 @@ export const createTrack = (track) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: CREATE_TRACK_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Delete track
+export const deleteTrack = (id,tid) => async (dispatch) => {
+  try {
+    dispatch({ type: DELETE_TRACK_REQUEST });
+
+    const { data } = await axios.delete(`/api/v1/track/delete/${id}/${tid}`);
+
+    dispatch({
+      type: DELETE_TRACK_SUCCESS,
+      payload: data.sucess,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_TRACK_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+//get particular track of the course details
+export const getTrackDetails = (id,tid) => async (dispatch) => {
+  try {
+    dispatch({
+      type: TRACK_DETAILS_REQUEST,
+    });
+    const { data } = await axios.get(`/api/v1/track/${id}/${tid}`);
+    dispatch({
+      type: TRACK_DETAILS_SUCCESS,
+      payload: data.trackDetails,
+    });
+  } catch (error) {
+    dispatch({
+      type: TRACK_DETAILS_FAIL,
       payload: error.response.data.message,
     });
   }

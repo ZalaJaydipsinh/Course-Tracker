@@ -9,6 +9,7 @@ const {
   getAllTracks,
   deleteTrack,
   getAllCoursesdata,
+  getTrackDetails,
 } = require("../controllers/courseController");
 const { isAuthenticatedUser } = require("../middleware/auth");
 
@@ -29,6 +30,8 @@ router.route("/course/new").post(isAuthenticatedUser, createCourse);
 
 router.route("/tracks").get(isAuthenticatedUser, getAllTracks);
 router.route("/track/new").post(isAuthenticatedUser,createTrack);
-router.route("/track/delete").get(isAuthenticatedUser,deleteTrack);
+router.route("/track/delete/:id/:tid").delete(isAuthenticatedUser,deleteTrack);
+
+router.route("/track/:id/:tid").get(getTrackDetails);
 
 module.exports = router;

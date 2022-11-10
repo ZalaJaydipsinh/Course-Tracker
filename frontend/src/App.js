@@ -15,6 +15,7 @@ import UserOptions from "./component/layout/Header/UserOptions";
 import NewCourse from "./component/Course/NewCourse";
 import NewTrack from "./component/Course/NewTrack";
 import UpdateCourse from "./component/Course/UpdateCourse";
+import UpdateTrack from "./component/Course/UpdateTrack";
 import store from "./store.js";
 import { loadUser } from "./actions/userAction";
 import { useSelector } from "react-redux";
@@ -54,6 +55,7 @@ function App() {
           <Route path="password/reset/:token" element={<ResetPassword />} />
           <Route path="course/new" element={<NewCourse />} />
           <Route path="track/new" element={<NewTrack />} />
+          <Route path="track/update" element={<UpdateTrack />} />
           <Route path="course/update/:id" element={<UpdateCourse />} />
 
         </Route>
