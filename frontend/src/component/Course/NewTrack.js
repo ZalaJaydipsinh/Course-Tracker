@@ -84,6 +84,7 @@ const NewTrack = () => {
             <Typography gutterBottom variant="h6">
               New Track Details
             </Typography>
+            
             <form
               onSubmit={createTrackSubmitHandler}
               encType="multipart/form-data"

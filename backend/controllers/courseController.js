@@ -22,17 +22,17 @@ exports.createCourse = catchAsyncErrors(async (req, res, next) => {
     description,
     totalTracks,
     doneTracks,
-    totalDuration:{
+    totalDuration: {
       hours: totalHours,
-      minutes: totalMinutes
+      minutes: totalMinutes,
     },
-    doneDuration:{
+    doneDuration: {
       hours: doneHours,
-      minutes: doneMinutes
+      minutes: doneMinutes,
     },
     tracks,
     user: req.user._id,
-    createdAt: Date.now()
+    createdAt: Date.now(),
   });
 
   res.status(201).json({
@@ -44,15 +44,19 @@ exports.createCourse = catchAsyncErrors(async (req, res, next) => {
 //get all courses of a user
 exports.getAllCourses = catchAsyncErrors(async (req, res) => {
   // const courseCount = await Course.countDocuments();
-  const apifeatures = new ApiFeatures(Course.find(), req.query,req.user._id).search();
+  const apifeatures = new ApiFeatures(
+    Course.find(),
+    req.query,
+    req.user._id
+  ).search();
 
   const courses = await apifeatures.query;
 
-  res.status(200).json({ sucess: true, courses, courseCount:courses.length });
+  res.status(200).json({ sucess: true, courses, courseCount: courses.length });
 });
 
 //get all courses of the site
-exports.getAllCoursesdata = catchAsyncErrors(async (req, res,next) => {
+exports.getAllCoursesdata = catchAsyncErrors(async (req, res, next) => {
   // return next(new ErrorHandler("Testing erros...",400));
   // const courseCount = await Course.countDocuments();
   // const apifeatures = new ApiFeatures(Course.find(), req.query,req.user._id).search();
@@ -83,11 +87,42 @@ exports.updateCourse = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Course not found.", 404));
   }
 
-  course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-    useFindAndModify: false,
-  });
+  const {
+    name,
+    description,
+    totalTracks,
+    doneTracks,
+    totalHours,
+    totalMinutes,
+    doneHours,
+    doneMinutes,
+    tracks,
+  } = req.body;
+
+  course = await Course.findByIdAndUpdate(
+    req.params.id,
+    {
+      name,
+      description,
+      totalTracks,
+      doneTracks,
+      totalDuration: {
+        hours: totalHours,
+        minutes: totalMinutes,
+      },
+      doneDuration: {
+        hours: doneHours,
+        minutes: doneMinutes,
+      },
+      tracks,
+      createdAt: Date.now(),
+    },
+    {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    }
+  );
 
   res.status(200).json({
     sucess: true,
@@ -177,7 +212,7 @@ exports.createTrack = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    track: newTrack
+    track: newTrack,
   });
 });
 

@@ -110,6 +110,32 @@ export const deleteCourse = (id) => async (dispatch) => {
   }
 };
 
+// Update Course
+export const updateCourse = (id, productData) => async (dispatch) => {
+  try {
+    dispatch({ type: UPDATE_COURSE_REQUEST });
+
+    const config = {
+      headers: { "Content-Type": "application/json" },
+    };
+
+    const { data } = await axios.put(
+      `/api/v1/course/${id}`,
+      productData,
+      config
+    );
+
+    dispatch({
+      type: UPDATE_COURSE_SUCCESS,
+      payload: data.sucess,
+    });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_COURSE_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
 
 // Create Track
 export const createTrack = (track) => async (dispatch) => {
