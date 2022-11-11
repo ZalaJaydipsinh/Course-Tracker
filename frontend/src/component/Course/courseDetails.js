@@ -2,14 +2,28 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
-import { clearErrors, getCourseDetails } from "../../actions/courseAction";
+import {
+  clearErrors,
+  getCourseDetails,
+  updateTrack,
+} from "../../actions/courseAction";
 import { useParams } from "react-router-dom";
 import "./courseDetails.css";
 import CourseSpeedDial from "./CourseSpeedDial";
 import { Link, useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { TRACK_DETAILS_RESET } from "../../constants/courseConstants";
+import { DataGrid } from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
+import IconButton from "@mui/material/IconButton";
+import Checkbox from "@mui/material/Checkbox";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import {
+  UPDATE_TRACK_RESET,
+  TRACK_DETAILS_RESET,
+} from "../../constants/courseConstants";
+
 const CourseDetails = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
@@ -18,6 +32,34 @@ const CourseDetails = () => {
   const { loading, course, error } = useSelector(
     (state) => state.courseDetails
   );
+  const {
+    error: UpdateError,
+    isUpdated,
+    loading: UpdateLoading,
+  } = useSelector((state) => state.track);
+
+  const handleChangeBookmarked = (checked, tid) => {
+    // console.log(checked, tid);
+    const myForm = new FormData();
+
+    myForm.set("bookmark", checked ? "1" : "");
+    myForm.set("updating", "bookmark");
+    myForm.set("courseId", id);
+    myForm.set("trackId", tid);
+
+    dispatch(updateTrack(myForm));
+  };
+
+  const handleChangeCompleted = (completed,tid) => {
+    const myForm = new FormData();
+
+    myForm.set("done", completed ? "1" : "");
+    myForm.set("updating", "done");
+    myForm.set("courseId", id);
+    myForm.set("trackId", tid);
+
+    dispatch(updateTrack(myForm));
+  };
 
   useEffect(() => {
     if (error) {
@@ -26,15 +68,100 @@ const CourseDetails = () => {
     }
     dispatch({ type: TRACK_DETAILS_RESET });
 
+    if (isUpdated) {
+      // alert.success("Track updated Successfully");
+      dispatch({ type: UPDATE_TRACK_RESET });
+      dispatch({ type: TRACK_DETAILS_RESET });
+      // history(`/course/${courseId}`);
+    }
+
     dispatch(getCourseDetails(id));
-  }, [dispatch]);
+  }, [dispatch, isUpdated]);
 
   function goToUpdateTrack(tid) {
-    // console.log(id, tid);
+    console.log("redirecting to update");
     history("/track/update", {
       state: { courseId: id, trackId: tid },
     });
   }
+
+  const columns = [
+    { field: "name", headerName: "Name", width: 200 },
+    {
+      field: "notes",
+      headerName: "Notes",
+      width: 300,
+    },
+    {
+      field: "bookmark",
+      headerName: "Bookmark",
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <>
+            <Checkbox
+              checked={params.row.bookmark}
+              onChange={() =>
+                handleChangeBookmarked(!params.row.bookmark, params.row.id)
+              }
+              icon={<BookmarkBorderIcon />}
+              checkedIcon={<BookmarkIcon />}
+            />
+          </>
+        );
+      },
+    },
+    {
+      field: "edit",
+      headerName: "Edit",
+      width: 110,
+      renderCell: (params) => {
+        return (
+          <>
+            <IconButton
+              color="primary"
+              onClick={() => goToUpdateTrack(params.row.id)}
+            >
+              <EditIcon />
+            </IconButton>
+          </>
+        );
+      },
+    },
+    {
+      field: "completed",
+      headerName: "Completed",
+      width: 160,
+      renderCell: (params) => {
+        return (
+          <>
+            <Checkbox
+              checked={params.row.completed}
+              onChange={() =>
+                handleChangeCompleted(!params.row.completed, params.row.id)
+              }
+            />
+          </>
+        );
+      },
+    },
+  ];
+
+  const rows = [];
+
+  course &&
+    course.tracks &&
+    course.tracks.forEach((item) => {
+      rows.push({
+        name: item.name,
+        notes: item.notes,
+        bookmark: item.bookmark,
+        completed: item.done,
+        hours: item.totalDuration.hours,
+        minutes: item.totalDuration.minutes,
+        id: item._id,
+      });
+    });
 
   return (
     <React.Fragment>
@@ -44,54 +171,13 @@ const CourseDetails = () => {
         <React.Fragment>
           <MetaData title={"Course Details"} />
           <CourseSpeedDial courseId={id} courseName={course.name} />
-          <table>
-            <caption>{course ? course.name : "Course Not Found"}</caption>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Done</th>
-                <th>Bookmark</th>
-                <th>Notes</th>
-                <th>Edit</th>
-              </tr>
-            </thead>
-            <tbody>
-              {course &&
-                course.tracks &&
-                course.tracks.map((track) => (
-                  <React.Fragment>
-                    <tr key={track._id}>
-                      <td>
-                        {" "}
-                        {track.name} <br />
-                        {track.totalDuration.hours > 0
-                          ? `H: ${track.totalDuration.hours}`
-                          : ""}
-                        {track.totalDuration.minutes > 0
-                          ? `M: ${track.totalDuration.minutes}`
-                          : ""}
-                      </td>
-                      <td>{track.done ? "Completed" : "not"}</td>
-                      <td>
-                        {track.bookmark ? "marked" : "not"} {track.url}
-                      </td>
-                      <td>{track.notes} </td>
-                      <td>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          onClick={() => {
-                            goToUpdateTrack(track._id);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                      </td>
-                    </tr>
-                  </React.Fragment>
-                ))}
-            </tbody>
-          </table>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={15}
+            disableSelectionOnClick
+            autoHeight
+          />
         </React.Fragment>
       )}
     </React.Fragment>

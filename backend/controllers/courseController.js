@@ -155,6 +155,7 @@ exports.createTrack = catchAsyncErrors(async (req, res, next) => {
     minutes,
     courseId,
     trackId,
+    updating,
   } = req.body;
 
   const newTrack = {
@@ -185,24 +186,42 @@ exports.createTrack = catchAsyncErrors(async (req, res, next) => {
         if (Boolean(done)) {
           course.addDoneDuration(hours, minutes);
         }
+
+        if (track.done && !Boolean(done)) {
+          course.doneTracks -= 1;
+        } else if (!track.done && Boolean(done)) {
+          course.doneTracks += 1;
+        }
+
         course.subtractTotalDuration(
           track.totalDuration.hours,
           track.totalDuration.minutes
         );
         course.addTotalDuration(hours, minutes);
 
-        track.name = name;
-        track.done = Boolean(done);
-        track.bookmark = Boolean(bookmark);
-        track.notes = notes;
-        track.url = url;
-        track.totalDuration.hours = Number(hours);
-        track.totalDuration.minutes =  Number(minutes);
+        if (!updating) {
+          track.name = name;
+          track.done = Boolean(done);
+          track.bookmark = Boolean(bookmark);
+          track.notes = notes;
+          track.url = url;
+          track.totalDuration.hours = Number(hours);
+          track.totalDuration.minutes = Number(minutes);
+        } else {
+          if (updating === "bookmark") {
+            track.bookmark = Boolean(bookmark);
+          } else if (updating === "done") {
+            track.done = Boolean(done);
+          }
+        }
       }
     });
   } else {
     course.tracks.push(newTrack);
     course.totalTracks = course.tracks.length;
+    if (newTrack.done) {
+      course.doneTracks += 1;
+    }
     course.addTotalDuration(hours, minutes);
   }
 
@@ -243,7 +262,7 @@ exports.getTrackDetails = catchAsyncErrors(async (req, res, next) => {
   if (!trackDetails) {
     return next(new ErrorHandler("Track not found.", 404));
   }
-  if(!course){
+  if (!course) {
     return next(new ErrorHandler("Course not found.", 404));
   }
 
