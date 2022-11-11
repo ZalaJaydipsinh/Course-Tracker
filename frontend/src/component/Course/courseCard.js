@@ -31,6 +31,9 @@ export default function CourseCard({ course }) {
           >
             {course.description}
           </Typography>
+          Tracks: {course.doneTracks} / {course.totalTracks}
+          <br />
+          Time: {course.doneDuration.hours} : {course.doneDuration.minutes} / {course.totalDuration.hours} : {course.totalDuration.minutes}
         </CardContent>
       </Box>
     </Card>

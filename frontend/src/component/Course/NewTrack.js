@@ -51,8 +51,8 @@ const NewTrack = () => {
 
     if (success) {
       alert.success("Track added Successfully");
-      history(`/course/${courseId}`);
       dispatch({ type: CREATE_TRACK_RESET });
+      history(`/course/${courseId}`);
     }
   }, [dispatch, alert, error, history, success]);
 

@@ -74,6 +74,7 @@ const UpdateTrack = () => {
     } else {
       setName(track.name);
       setNote(track.notes);
+      console.log("track url: ",track.url);
       setUrl(track.url);
       setTotalHours(track.totalDuration.hours);
       setTotalMinutes(track.totalDuration.minutes);

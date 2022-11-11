@@ -12,9 +12,11 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import WhereToVoteRoundedIcon from "@mui/icons-material/WhereToVoteRounded";
-import { Outlet,Link } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
+import "./Appbar.css";
 
-const pages = ["courses", "New", "Update"];
+const pages = ["courses", "New"];
+const pagesRoute = ["/", "course/new"];
 const settings = ["Login", "Profile", "Logout"];
 
 function ResponsiveAppBar() {
@@ -91,11 +93,11 @@ function ResponsiveAppBar() {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {pages.map((page) => (
+                {pages.map((page, index) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    
-                    <Typography textAlign="center">{page}</Typography>
-                    
+                    <Link to={pagesRoute[index]}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </Link>
                   </MenuItem>
                 ))}
               </Menu>
@@ -122,45 +124,16 @@ function ResponsiveAppBar() {
               CourseTracker
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
+              {pages.map((page, index) => (
+                <Link className="pageRoute" to={pagesRoute[index]}>
+                  <Button
+                    key={page}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page}
+                  </Button>
+                </Link>
               ))}
-            </Box>
-
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                   <Typography textAlign="center"><Link to={`/${setting}`}> {setting}</Link> </Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
             </Box>
           </Toolbar>
         </Container>

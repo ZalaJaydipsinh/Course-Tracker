@@ -67,7 +67,6 @@ const courseSchema = new mongoose.Schema({
   },
 });
 
-
 courseSchema.methods.addDoneDuration = function (hours, minutes) {
   this.doneDuration.hours += hours;
   this.doneDuration.minutes += minutes;
@@ -82,7 +81,6 @@ courseSchema.methods.subtractDoneDuration = function (hours, minutes) {
   this.doneDuration.minutes -= minutes;
 
   this.doneDuration.hours += parseInt(this.doneDuration.minutes / 60);
-
   this.doneDuration.minutes = this.doneDuration.minutes % 60;
 
   if (this.doneDuration.minutes < 0) {
@@ -91,8 +89,8 @@ courseSchema.methods.subtractDoneDuration = function (hours, minutes) {
       this.doneDuration.minutes += minutes;
       return;
     }
-    this.doneDuration.hours -= ((-1 * this.doneDuration.minutes) % 60) + 1;
-    this.doneDuration.minutes = 60 - this.doneDuration.minutes;
+    this.doneDuration.hours -= parseInt((-1 * this.doneDuration.minutes) / 60) + 1;
+    this.doneDuration.minutes = 60 + this.doneDuration.minutes;
   }
 };
 

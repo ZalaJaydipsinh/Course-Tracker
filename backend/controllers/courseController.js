@@ -177,29 +177,22 @@ exports.createTrack = catchAsyncErrors(async (req, res, next) => {
   if (trackId) {
     course.tracks.forEach((track) => {
       if (track._id.toString() === trackId) {
-        if (track.done) {
-          course.subtractDoneDuration(
+        if (!updating) {
+          if (track.done) {
+            course.subtractDoneDuration(
+              track.totalDuration.hours,
+              track.totalDuration.minutes
+            );
+          }
+          if (Boolean(done)) {
+            course.addDoneDuration(Number(hours), Number(minutes));
+          }
+          course.subtractTotalDuration(
             track.totalDuration.hours,
             track.totalDuration.minutes
           );
-        }
-        if (Boolean(done)) {
-          course.addDoneDuration(hours, minutes);
-        }
+          course.addTotalDuration(Number(hours), Number(minutes));
 
-        if (track.done && !Boolean(done)) {
-          course.doneTracks -= 1;
-        } else if (!track.done && Boolean(done)) {
-          course.doneTracks += 1;
-        }
-
-        course.subtractTotalDuration(
-          track.totalDuration.hours,
-          track.totalDuration.minutes
-        );
-        course.addTotalDuration(hours, minutes);
-
-        if (!updating) {
           track.name = name;
           track.done = Boolean(done);
           track.bookmark = Boolean(bookmark);
@@ -211,6 +204,30 @@ exports.createTrack = catchAsyncErrors(async (req, res, next) => {
           if (updating === "bookmark") {
             track.bookmark = Boolean(bookmark);
           } else if (updating === "done") {
+            if (track.done && !Boolean(done)) {
+              course.doneTracks -= 1;
+              course.subtractDoneDuration(
+                track.totalDuration.hours,
+                track.totalDuration.minutes
+              );
+              // console.log(
+              //   "unchecking...",
+              //   track.totalDuration.hours,
+              //   track.totalDuration.minutes
+              // );
+            } else if (!track.done && Boolean(done)) {
+              course.doneTracks += 1;
+              course.addDoneDuration(
+                track.totalDuration.hours,
+                track.totalDuration.minutes
+              );
+              // console.log(
+              //   "Checking...",
+              //   track.totalDuration.hours,
+              //   track.totalDuration.minutes
+              // );
+            }
+
             track.done = Boolean(done);
           }
         }
@@ -221,8 +238,9 @@ exports.createTrack = catchAsyncErrors(async (req, res, next) => {
     course.totalTracks = course.tracks.length;
     if (newTrack.done) {
       course.doneTracks += 1;
+      course.addDoneDuration(Number(hours), Number(minutes));
     }
-    course.addTotalDuration(hours, minutes);
+    course.addTotalDuration(Number(hours), Number(minutes));
   }
 
   await course.save({ validateBeforeSave: false });

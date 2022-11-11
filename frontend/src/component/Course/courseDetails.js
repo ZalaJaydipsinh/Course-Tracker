@@ -23,6 +23,7 @@ import {
   UPDATE_TRACK_RESET,
   TRACK_DETAILS_RESET,
 } from "../../constants/courseConstants";
+import Chip from "@mui/material/Chip";
 
 const CourseDetails = () => {
   const history = useNavigate();
@@ -50,7 +51,7 @@ const CourseDetails = () => {
     dispatch(updateTrack(myForm));
   };
 
-  const handleChangeCompleted = (completed,tid) => {
+  const handleChangeCompleted = (completed, tid) => {
     const myForm = new FormData();
 
     myForm.set("done", completed ? "1" : "");
@@ -86,11 +87,17 @@ const CourseDetails = () => {
   }
 
   const columns = [
-    { field: "name", headerName: "Name", width: 200 },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 200,
+      flex: 0.7,
+    },
     {
       field: "notes",
       headerName: "Notes",
       width: 300,
+      flex: 1,
     },
     {
       field: "bookmark",
@@ -110,6 +117,7 @@ const CourseDetails = () => {
           </>
         );
       },
+      flex: 0.2,
     },
     {
       field: "edit",
@@ -127,12 +135,21 @@ const CourseDetails = () => {
           </>
         );
       },
+      flex: 0.2,
     },
     {
       field: "completed",
       headerName: "Completed",
       width: 160,
       renderCell: (params) => {
+        let chipData = `${
+          params.row.hours < 10 ? `0${params.row.hours}` : params.row.hours
+        }:${
+          params.row.minutes < 10
+            ? `0${params.row.minutes}`
+            : params.row.minutes
+        }`;
+
         return (
           <>
             <Checkbox
@@ -141,9 +158,17 @@ const CourseDetails = () => {
                 handleChangeCompleted(!params.row.completed, params.row.id)
               }
             />
+            <Chip
+              className="timeChip"
+              size="small"
+              label={chipData}
+              color="primary"
+              variant="outlined"
+            />
           </>
         );
       },
+      flex: 0.3,
     },
   ];
 
@@ -170,6 +195,12 @@ const CourseDetails = () => {
       ) : (
         <React.Fragment>
           <MetaData title={"Course Details"} />
+          <div>
+            Tracks: {course && course.doneTracks} / {course && course.totalTracks}
+            <br />
+            Time: {course && course.doneDuration && course.doneDuration.hours} : {course && course.doneDuration &&  course.doneDuration.minutes} /{" "}
+            {course && course.totalDuration &&  course.totalDuration.hours} : {course && course.totalDuration && course.totalDuration.minutes}
+          </div>
           <CourseSpeedDial courseId={id} courseName={course.name} />
           <DataGrid
             rows={rows}
