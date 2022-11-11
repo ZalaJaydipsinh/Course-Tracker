@@ -53,7 +53,7 @@ function App() {
           />
           <Route path="password/forgot" element={<ForgotPassword />} />
           <Route path="password/reset/:token" element={<ResetPassword />} />
-          <Route path="course/new" element={<NewCourse />} />
+          <Route path="course/new" element={ isAuthenticated ? <NewCourse /> : <LoginSignUp />} />
           <Route path="track/new" element={<NewTrack />} />
           <Route path="track/update" element={<UpdateTrack />} />
           <Route path="course/update/:id" element={<UpdateCourse />} />

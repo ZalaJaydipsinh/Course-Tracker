@@ -76,7 +76,7 @@ const NewTrack = () => {
   return (
     <div className="track">
       <Grid>
-        <Card style={{ maxWidth: 450, padding: "20px 5px", margin: "0 auto" }}>
+        <Card style={{ maxWidth: 450, padding: "20px 5px", margin: "0 auto",backgroundColor: "rgb(234, 242, 248)",   borderRadius: "3%", marginTop: "2vh", boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"}}>
           <CardContent>
             <Typography gutterBottom variant="h4">
               {location && location.state.courseName}

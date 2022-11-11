@@ -11,29 +11,72 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import { Link } from "react-router-dom";
 import "./courseCard.css";
+import Progress from "./Progress";
 
 export default function CourseCard({ course }) {
-  //   const theme = useTheme();
-
   return (
-    <Card className="card" sx={{ display: "flex" }}>
+    <Card
+      className="card"
+      sx={{
+        maxWidth: 350,
+        padding: "20px 5px",
+        backgroundColor: "rgb(234, 242, 248)",
+        borderRadius: "1%",
+        marginTop: "2vh",
+        transition: "1s",
+        maxHeight: 150,
+      }}
+    >
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <CardContent sx={{ flex: "1 0 auto" }}>
-          <Link to={`/course/${course._id}`}>
-            <Typography component="div" variant="h5">
-              {course.name}
+          <div className="courseInfo">
+            <Link to={`/course/${course._id}`}>
+              <Typography component="div" variant="h5">
+                {course.name}
+              </Typography>
+            </Link>
+            <Typography
+              variant="subtitle1"
+              color="text.secondary"
+              component="div"
+            >
+              {course.description}
             </Typography>
-          </Link>
-          <Typography
-            variant="subtitle1"
-            color="text.secondary"
-            component="div"
-          >
-            {course.description}
-          </Typography>
-          Tracks: {course.doneTracks} / {course.totalTracks}
-          <br />
-          Time: {course.doneDuration.hours} : {course.doneDuration.minutes} / {course.totalDuration.hours} : {course.totalDuration.minutes}
+          </div>
+          <div className="progressDiv">
+            <div className="trackProgress">
+              <Progress
+                progress={(course.doneTracks * 100) / course.totalTracks}
+              />
+              <hr />
+              <p className="progressInfo">
+              Track
+              <br />
+              {course.doneTracks} / {course.totalTracks}
+              </p>
+            </div>
+
+            <div className="timeProgress">
+              <Progress
+                progress={
+                  course &&
+                  course.doneDuration &&
+                  ((course.doneDuration.minutes +
+                    course.doneDuration.hours * 60) *
+                    100) /
+                    (course.totalDuration.minutes +
+                      course.totalDuration.hours * 60)
+                }
+              />
+              <hr />
+              <p className="progressInfo">
+              Time
+              <br />
+              {course.doneDuration.hours} : {course.doneDuration.minutes} /{" "}
+            {course.totalDuration.hours} : {course.totalDuration.minutes}
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Box>
     </Card>

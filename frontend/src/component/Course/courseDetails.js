@@ -7,6 +7,7 @@ import {
   getCourseDetails,
   updateTrack,
 } from "../../actions/courseAction";
+import Progress from "./Progress";
 import { useParams } from "react-router-dom";
 import "./courseDetails.css";
 import CourseSpeedDial from "./CourseSpeedDial";
@@ -196,11 +197,27 @@ const CourseDetails = () => {
         <React.Fragment>
           <MetaData title={"Course Details"} />
           <div>
-            Tracks: {course && course.doneTracks} / {course && course.totalTracks}
+            Tracks: {course && course.doneTracks} /{" "}
+            {course && course.totalTracks}
             <br />
-            Time: {course && course.doneDuration && course.doneDuration.hours} : {course && course.doneDuration &&  course.doneDuration.minutes} /{" "}
-            {course && course.totalDuration &&  course.totalDuration.hours} : {course && course.totalDuration && course.totalDuration.minutes}
+            Time: {course &&
+              course.doneDuration &&
+              course.doneDuration.hours} :{" "}
+            {course && course.doneDuration && course.doneDuration.minutes} /{" "}
+            {course && course.totalDuration && course.totalDuration.hours} :{" "}
+            {course && course.totalDuration && course.totalDuration.minutes}
           </div>
+          <div>
+            <Progress
+              progress={course && course.doneTracks && ((course.doneTracks * 100) / course.totalTracks)}
+            />
+            <Progress
+              progress={
+                course && course.doneDuration && ((course.doneDuration.minutes + course.doneDuration.hours * 60)*100)/(course.totalDuration.minutes + course.totalDuration.hours*60)
+              }
+            />
+          </div>
+
           <CourseSpeedDial courseId={id} courseName={course.name} />
           <DataGrid
             rows={rows}

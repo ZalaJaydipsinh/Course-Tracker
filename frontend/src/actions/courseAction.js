@@ -42,8 +42,8 @@ export const getCourse = () => async (dispatch) => {
     dispatch({
       type: ALL_COURSE_REQUEST,
     });
-
-    const { data } = await axios.get("/api/v1/coursesdata");
+    //TODO get courses of the particular user id.
+    const { data } = await axios.get("/api/v1/courses");
     dispatch({
       type: ALL_COURSE_SUCCESS,
       payload: data,
