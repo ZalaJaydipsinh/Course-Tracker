@@ -13,7 +13,6 @@ import "./courseDetails.css";
 import CourseSpeedDial from "./CourseSpeedDial";
 import { Link, useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
@@ -196,36 +195,88 @@ const CourseDetails = () => {
       ) : (
         <React.Fragment>
           <MetaData title={"Course Details"} />
-          <div>
-            Tracks: {course && course.doneTracks} /{" "}
-            {course && course.totalTracks}
-            <br />
-            Time: {course &&
-              course.doneDuration &&
-              course.doneDuration.hours} :{" "}
-            {course && course.doneDuration && course.doneDuration.minutes} /{" "}
-            {course && course.totalDuration && course.totalDuration.hours} :{" "}
-            {course && course.totalDuration && course.totalDuration.minutes}
-          </div>
-          <div>
-            <Progress
-              progress={course && course.doneTracks && ((course.doneTracks * 100) / course.totalTracks)}
-            />
-            <Progress
-              progress={
-                course && course.doneDuration && ((course.doneDuration.minutes + course.doneDuration.hours * 60)*100)/(course.totalDuration.minutes + course.totalDuration.hours*60)
-              }
-            />
-          </div>
 
+          <>
+          <div className="progressDiv">
+              <div className="trackProgress">
+                <Progress
+                  progress={(course.doneTracks * 100) / course.totalTracks}
+                />
+                <hr />
+                <p className="progressInfo">
+                  Track
+                  <br />
+                  {course.doneTracks} / {course.totalTracks}
+                </p>
+              </div>
+
+              <div className="timeProgress">
+                <Progress
+                  progress={
+                    course &&
+                    course.doneDuration &&
+                    ((course.doneDuration.minutes +
+                      course.doneDuration.hours * 60) *
+                      100) /
+                      (course.totalDuration.minutes +
+                        course.totalDuration.hours * 60)
+                  }
+                />
+                <hr />
+                <p className="progressInfo">
+                  Time
+                  <br />
+                  {course && course.doneDuration && course.doneDuration.hours} : { course && course.doneDuration && course.doneDuration.minutes} /{" "}
+                  {course && course.totalDuration && course.totalDuration.hours} : {course && course.totalDuration && course.totalDuration.minutes}
+                </p>
+              </div>
+            </div>
+          <div className="courseInfo">
+              <div
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "8rem",
+                  height: "2rem",
+                }}
+              >
+                <Typography component="div" variant="h5" nowrap>
+                  {course && course.name}
+                </Typography>
+              </div>
+              <div
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "60rem",
+                  height: "7rem",
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  component="div"
+                >
+                  {course && course.description}
+                </Typography>
+              </div>
+            </div>
+
+          </>
+
+          <br />
+          <br />
+          <div className="tableDiv">
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={15}
+              disableSelectionOnClick
+              autoHeight
+              sx={{ width: 1 }}
+            />
+          </div>
           <CourseSpeedDial courseId={id} courseName={course.name} />
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={15}
-            disableSelectionOnClick
-            autoHeight
-          />
         </React.Fragment>
       )}
     </React.Fragment>

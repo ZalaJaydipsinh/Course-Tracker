@@ -15,70 +15,88 @@ import Progress from "./Progress";
 
 export default function CourseCard({ course }) {
   return (
-    <Card
-      className="card"
-      sx={{
-        maxWidth: 350,
-        padding: "20px 5px",
-        backgroundColor: "rgb(234, 242, 248)",
-        borderRadius: "1%",
-        marginTop: "2vh",
-        transition: "1s",
-        maxHeight: 150,
-      }}
-    >
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <CardContent sx={{ flex: "1 0 auto" }}>
-          <div className="courseInfo">
-            <Link to={`/course/${course._id}`}>
-              <Typography component="div" variant="h5">
-                {course.name}
-              </Typography>
-            </Link>
-            <Typography
-              variant="subtitle1"
-              color="text.secondary"
-              component="div"
-            >
-              {course.description}
-            </Typography>
-          </div>
-          <div className="progressDiv">
-            <div className="trackProgress">
-              <Progress
-                progress={(course.doneTracks * 100) / course.totalTracks}
-              />
-              <hr />
-              <p className="progressInfo">
-              Track
-              <br />
-              {course.doneTracks} / {course.totalTracks}
-              </p>
+    <Link to={`/course/${course._id}`}>
+      <Card
+        className="card"
+        sx={{
+          maxWidth: 350,
+          padding: "5px",
+          backgroundColor: "rgb(234, 242, 248)",
+          borderRadius: "1%",
+          marginTop: "2vh",
+          transition: "1s",
+          maxHeight: 170,
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <CardContent sx={{ flex: "1 0 auto" }}>
+            <div className="courseInfo">
+              <div
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "8rem",
+                  height: "2rem",
+                }}
+              >
+                <Typography component="div" variant="h5" nowrap>
+                  {course.name}
+                </Typography>
+              </div>
+              <div
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "8rem",
+                  height: "7rem",
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  component="div"
+                >
+                  {course.description}
+                </Typography>
+              </div>
             </div>
+            <div className="progressDiv">
+              <div className="trackProgress">
+                <Progress
+                  progress={(course.doneTracks * 100) / course.totalTracks}
+                />
+                <hr />
+                <p className="progressInfo">
+                  Track
+                  <br />
+                  {course.doneTracks} / {course.totalTracks}
+                </p>
+              </div>
 
-            <div className="timeProgress">
-              <Progress
-                progress={
-                  course &&
-                  course.doneDuration &&
-                  ((course.doneDuration.minutes +
-                    course.doneDuration.hours * 60) *
-                    100) /
-                    (course.totalDuration.minutes +
-                      course.totalDuration.hours * 60)
-                }
-              />
-              <hr />
-              <p className="progressInfo">
-              Time
-              <br />
-              {course.doneDuration.hours} : {course.doneDuration.minutes} /{" "}
-            {course.totalDuration.hours} : {course.totalDuration.minutes}
-              </p>
+              <div className="timeProgress">
+                <Progress
+                  progress={
+                    course &&
+                    course.doneDuration &&
+                    ((course.doneDuration.minutes +
+                      course.doneDuration.hours * 60) *
+                      100) /
+                      (course.totalDuration.minutes +
+                        course.totalDuration.hours * 60)
+                  }
+                />
+                <hr />
+                <p className="progressInfo">
+                  Time
+                  <br />
+                  {course.doneDuration.hours} : {course.doneDuration.minutes} /{" "}
+                  {course.totalDuration.hours} : {course.totalDuration.minutes}
+                </p>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Box>
-    </Card>
+          </CardContent>
+        </Box>
+      </Card>
+    </Link>
   );
 }
