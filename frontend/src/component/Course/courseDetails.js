@@ -9,7 +9,6 @@ import {
 } from "../../actions/courseAction";
 import Progress from "./Progress";
 import { useParams } from "react-router-dom";
-import "./courseDetails.css";
 import CourseSpeedDial from "./CourseSpeedDial";
 import { Link, useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -24,6 +23,7 @@ import {
   TRACK_DETAILS_RESET,
 } from "../../constants/courseConstants";
 import Chip from "@mui/material/Chip";
+import "./courseDetails.css";
 
 const CourseDetails = () => {
   const history = useNavigate();
@@ -196,8 +196,8 @@ const CourseDetails = () => {
         <React.Fragment>
           <MetaData title={"Course Details"} />
 
-          <>
-          <div className="progressDiv">
+          <div className="courseDetailDivCD">
+            <div className="progressDivCD">
               <div className="trackProgress">
                 <Progress
                   progress={(course.doneTracks * 100) / course.totalTracks}
@@ -226,12 +226,20 @@ const CourseDetails = () => {
                 <p className="progressInfo">
                   Time
                   <br />
-                  {course && course.doneDuration && course.doneDuration.hours} : { course && course.doneDuration && course.doneDuration.minutes} /{" "}
-                  {course && course.totalDuration && course.totalDuration.hours} : {course && course.totalDuration && course.totalDuration.minutes}
+                  {course &&
+                    course.doneDuration &&
+                    course.doneDuration.hours} :{" "}
+                  {course && course.doneDuration && course.doneDuration.minutes}{" "}
+                  /{" "}
+                  {course && course.totalDuration && course.totalDuration.hours}{" "}
+                  :{" "}
+                  {course &&
+                    course.totalDuration &&
+                    course.totalDuration.minutes}
                 </p>
               </div>
             </div>
-          <div className="courseInfo">
+            <div className="courseInfoCD">
               <div
                 style={{
                   overflow: "hidden",
@@ -261,12 +269,11 @@ const CourseDetails = () => {
                 </Typography>
               </div>
             </div>
-
-          </>
+          </div>
 
           <br />
           <br />
-          <div className="tableDiv">
+          <div className="tableDivCD">
             <DataGrid
               rows={rows}
               columns={columns}

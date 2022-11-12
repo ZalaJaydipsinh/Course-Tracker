@@ -10,12 +10,12 @@ import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import { Link } from "react-router-dom";
-import "./courseCard.css";
 import Progress from "./Progress";
+import "./courseCard.css";
 
 export default function CourseCard({ course }) {
   return (
-    <Link to={`/course/${course._id}`}>
+    <Link to={`/course/${course._id}`} className="cardLink">
       <Card
         className="card"
         sx={{

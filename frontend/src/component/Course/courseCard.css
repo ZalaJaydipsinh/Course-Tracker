@@ -9,6 +9,7 @@
   min-width: 70;
   top: 0%;
   right: 0%;
+  margin-left: 3vh;
 }
 
 .courseInfo {
@@ -41,4 +42,9 @@
   width: 5px;
   height: 100%;
   background-color: black;
+}
+
+.cardLink{
+  float: left;
+  margin: 1rem;
 }
