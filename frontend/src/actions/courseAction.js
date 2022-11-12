@@ -37,13 +37,12 @@ import {
 } from "../constants/courseConstants";
 
 //get data of all courses
-export const getCourse = () => async (dispatch) => {
+export const getCourse = (keyword = "") => async (dispatch) => {
   try {
     dispatch({
       type: ALL_COURSE_REQUEST,
     });
-    //TODO get courses of the particular user id.
-    const { data } = await axios.get("/api/v1/courses");
+    const { data } = await axios.get(`/api/v1/courses?keyword=${keyword}`);
     dispatch({
       type: ALL_COURSE_SUCCESS,
       payload: data,

@@ -1,0 +1,10 @@
+.searchDiv{
+    display: block;
+    margin: 1vh auto;
+    align-items: center;
+    text-align: center;
+}
+
+.searchBtn{
+    height: 3rem;
+}
